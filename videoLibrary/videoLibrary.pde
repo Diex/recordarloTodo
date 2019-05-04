@@ -11,6 +11,7 @@ int controllerWidth = 250;
 
 void setup() {
   size(1200, 800, P3D);
+  //setupConsole();
   cp5 = new ControlP5(this);
   // create a new button with name 'buttonA'
   cp5.addButton("openFolder")
@@ -52,14 +53,14 @@ void movieEvent(Movie m) {
 public void controlEvent(ControlEvent theEvent) {
 
   if (theEvent.getController().getName().equals("openFolder")) {
-    selectFolder("Select a folder to process:", "folderSelected");
+    selectFolder("Select a folder to process:", "folderSelected");    
     return;
   }
 
   if (theEvent.getController().getName().equals("videosList")) {
     String movieName = ((ScrollableList) theEvent.getController()).getItem((int) theEvent.getController().getValue()).get("text").toString();
-    String moviePath = vf.folder+File.separator+movieName;
-    replaceVideo(moviePath);
+    String moviePath = vf.folder+File.separator+movieName;    
+    replaceVideo(moviePath);    
     return;
   }
 
@@ -76,4 +77,16 @@ void replaceVideo(String moviePath) {
 
   current = new Movie(this, moviePath);    
   current.loop();
+}
+
+
+void stop(){
+  try{
+    
+  if(connection != null) connection.close();
+  }catch (SQLException e){
+    e.printStackTrace();
+  }
+  
+  super.stop();
 }

@@ -39,5 +39,7 @@ void folderSelected(File selection) {
     videosList.clear();    
     videosList.addItems(vf.files);
     videosList.open();
+    dbConnect(vf);
+    dbAddFiles(vf);
   }
 }
