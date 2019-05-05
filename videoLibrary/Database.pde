@@ -14,7 +14,8 @@ void dbConnect(VideoFolder vf) {
   // load the sqlite-JDBC driver using the current class loader
   try {
     Class.forName("org.sqlite.JDBC");
-  }catch(ClassNotFoundException e) {
+  }
+  catch(ClassNotFoundException e) {
     e.printStackTrace();
   }
 
@@ -45,7 +46,7 @@ void dbAddFiles(VideoFolder vf) {
 }
 
 int dbAddVideo(String name) {
-  if (getVideoId(name) == null) {
+  if (dbGetVideoId(name) == null) {
     insert("videos", "name", name);
   }
   return 0;
@@ -54,7 +55,7 @@ int dbAddVideo(String name) {
 void dbAddTagToVideo(String video, String tag) {
 
   String tagId = dbGetTagId(tag); 
-  String videoId = getVideoId(video);
+  String videoId = dbGetVideoId(video);
 
   if (tagId == null) {
     println("inserting tag: "+ tag);
@@ -148,13 +149,13 @@ public String dbGetTagId(String tag) {
   return tag_id;
 }
 
-public String getVideoId(String name) {
+public String dbGetVideoId(String name) {
 
   String sql = "SELECT * "
     + "FROM videos WHERE name = ?";
-    
+
   String video_id = null;
-  
+
   try {
 
     PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -175,9 +176,9 @@ public String getVideoId(String name) {
 
 
 public ArrayList<String> dbGetTagsIdForVideo(String moviePath) {
- 
+
   ArrayList<String> tags = new ArrayList<String>();  
-  String videoId = getVideoId(moviePath);
+  String videoId = dbGetVideoId(moviePath);
   String sql = "SELECT * "
     + "FROM links WHERE video_id = ?";
 
@@ -189,50 +190,50 @@ public ArrayList<String> dbGetTagsIdForVideo(String moviePath) {
 
     while (rs.next()) {
       String tagId = rs.getString("tag_id");
-      tags.add(tagId);      
+      tags.add(tagId);
     }
   } 
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
-  
-  
+
+
   return tags;
 }
 
 
-public ArrayList<String> dbGetTags(String value){
-   
+public ArrayList<String> dbGetTags(String value) {
+
   ArrayList<String> tags = new ArrayList<String>();
- 
-  if(value == null || value == "") {
+
+  if (value == null || value == "") {
     value = "%";
-  }else{
+  } else {
     value += "%";
   }
-  String sql = "SELECT * FROM tags WHERE tag LIKE ? ORDER BY tag ASC";; 
+  String sql = "SELECT * FROM tags WHERE tag LIKE ? ORDER BY tag ASC";
+  ; 
   try {
     PreparedStatement pstmt  = connection.prepareStatement(sql);
     pstmt.setString(1, value);    
     ResultSet rs  = pstmt.executeQuery();
 
     while (rs.next()) {      
-      tags.add(rs.getString("tag"));      
+      tags.add(rs.getString("tag"));
     }
   } 
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
   return tags;
-  
 }
 
 
-public String dbGetTag(String tagId){
-  
+public String dbGetTag(String tagId) {
+
   String tag = null;
-  
-   String sql = "SELECT * "
+
+  String sql = "SELECT * "
     + "FROM tags WHERE tag_id = ?";
 
   try {
@@ -242,12 +243,91 @@ public String dbGetTag(String tagId){
     ResultSet rs  = pstmt.executeQuery();
 
     while (rs.next()) {
-      
-      tag = rs.getString("tag");      
+
+      tag = rs.getString("tag");
     }
   } 
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
   return tag;
+}
+
+public ArrayList<String> dbGetVideosForTag(String tag) {
+  ArrayList<String> videos = new ArrayList<String>();  
+  String tagId = dbGetTagId(tag);
+  
+  String sql = "SELECT * "
+    + "FROM links WHERE tag_id = ?";
+
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, tagId);    
+    ResultSet rs  = pstmt.executeQuery();
+
+    while (rs.next()) {      
+      videos.add(dbGetVideo(rs.getString("video_id")));
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+  return videos;
+}
+
+
+public String dbGetVideo(String videoId){
+   
+  String video = null;
+  
+  String sql = "SELECT * "
+    + "FROM videos WHERE video_id = ?";
+
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, videoId);    
+    ResultSet rs  = pstmt.executeQuery();
+
+    while (rs.next()) {      
+      video = rs.getString("name");
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+  
+  return video;
+
+}
+
+public void dbDeleteLink(String videoName, String tag){
+    
+  String videoId = dbGetVideoId(videoName);
+  String tagId = dbGetTagId(tag);
+  
+  println(videoId, tagId);
+  
+  
+  String sql = "DELETE FROM links WHERE video_id = ? AND tag_id = ?";
+    
+    //String sql = "SELECT link_id FROM links WHERE video_id = ?"+ 
+    //"AND tag_id LIKE ?";
+
+
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, videoId);
+    pstmt.setString(2, tagId);
+    pstmt.executeUpdate();
+
+    //while (rs.next()) {      
+      
+    //}
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
 }

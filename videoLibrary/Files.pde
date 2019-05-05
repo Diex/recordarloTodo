@@ -26,20 +26,3 @@ class VideoFolder {
     return this.folder.getPath() + File.separator + files.get(file);
   }
 }
-
-// se llama cuando el usuario elije la carpeta
-void folderSelected(File selection) {
-  if (selection == null) {
-    println("Window was closed or the user hit cancel.");
-  } else {
-    println("User selected " + selection.getAbsolutePath());
-    vf = new VideoFolder(selection);
-    //println(vf.size());
-    //println(vf.files);
-    videosList.clear();    
-    videosList.addItems(vf.files);
-    videosList.open();
-    dbConnect(vf);
-    dbAddFiles(vf);
-  }
-}
