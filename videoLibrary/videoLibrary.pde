@@ -15,15 +15,17 @@ boolean deleteTags = false;
 
 int controllerWidth = 250;
 
+JSONObject settings;
+
 /*
 TODO:
- resetear la lista de videos al contenido de la carpeta
+ DONE resetear la lista de videos al contenido de la carpeta
  limpiar DB
  eliminar videos que falta
  eliminar links a ese video
  eliminar tags no usados
- listar todos los tags
- agregar un tag de la lista al video
+ DONE listar todos los tags
+ DONE agregar un tag de la lista al video
  
  */
 
@@ -53,7 +55,8 @@ void setup() {
     .setPosition(20, 100)
     .setSize(controllerWidth, 370)
     .setBarHeight(20)
-    .setItemHeight(20);
+    .setItemHeight(20)
+    .setColorCaptionLabel(color(255,0,0));
 
   // create a toggle and change the default look to a (on/off) switch look
   removeTag = cp5.addToggle("toggle")
@@ -62,7 +65,7 @@ void setup() {
     .setSize(50, 20)
     .setValue(false)
     .setMode(ControlP5.SWITCH)
-    .setColorActive(color(0,116,217))
+    .setColorActive(color(0, 116, 217))
     ;
 
 
@@ -71,14 +74,16 @@ void setup() {
     .setSize(controllerWidth, 230)
     .setBarHeight(20)
     .setItemHeight(20)
-    .setOpen(true);
+    .setOpen(true)
+    .setColorCaptionLabel(color(255,0,0));
 
   tagsList = cp5.addScrollableList("tagsList")
     .setPosition(300, 560)
     .setSize(controllerWidth, 220)
     .setBarHeight(20)
     .setItemHeight(20)
-    .setOpen(true);
+    .setOpen(true)
+    .setColorCaptionLabel(color(255,0,0));
 
 
   tagInput = cp5.addTextfield("tagInput")
@@ -88,10 +93,20 @@ void setup() {
     .setColor(color(255, 255, 255))
     ;
 
+  try {
+    settings = loadJSONObject("./data/settings.json");
+ 
+    folderSelected(new File (settings.getString("defaultPath")));
+    replaceTagsList(null);
+  }
+  catch(Exception e) {
+    settings = new JSONObject();
+    selectFolder("Select a folder to process:", "folderSelected");
+  }
+  
+  
 
-  folderSelected(new File ("/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data/footage/"));
-
-  replaceTagsList(null);
+  
 }
 
 
@@ -171,13 +186,13 @@ public void tagInput(String theText) {
 
 
 public void toggle(boolean theFlag) {
-  if(removeTag == null) return;
+  if (removeTag == null) return;
   deleteTags = theFlag;
-  
-  if(deleteTags) {
-    removeTag.setColorActive(color(255,0,0));
-  }else{
-    removeTag.setColorActive(color(0,116,217));
+
+  if (deleteTags) {
+    removeTag.setColorActive(color(255, 0, 0));
+  } else {
+    removeTag.setColorActive(color(0, 116, 217));
   }
 }
 
@@ -220,26 +235,29 @@ void folderSelected(File selection) {
     println("Window was closed or the user hit cancel.");
   } else {
     println("User selected " + selection.getAbsolutePath());
+    settings.setString("defaultPath",selection.getAbsolutePath());
     vf = new VideoFolder(selection);
     videosList.clear();    
     videosList.addItems(vf.files);
     videosList.open();
     dbConnect(vf);
     dbAddFiles(vf);
+    replaceTagsList(null);
   }
 }
 
 
 
 
-void stop() {
+public void exit() {
   try {
-
     if (connection != null) connection.close();
   }
   catch (SQLException e) {
     e.printStackTrace();
   }
 
-  super.stop();
+  saveJSONObject(settings, "data/settings.json");
+  println("videLibrary says bye bye...");
+  super.exit();
 }
