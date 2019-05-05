@@ -5,7 +5,7 @@ import controlP5.*;
 ControlP5 cp5;
 
 ScrollableList videosList;
-ScrollableList tagsForVideo;
+ScrollableList tagsList;
 Textfield tagInput;
 
 int controllerWidth = 250;
@@ -13,7 +13,7 @@ int controllerWidth = 250;
 
 void setup() {
   size(1200, 800, P3D);
-  
+
   cp5 = new ControlP5(this);
 
   cp5.addButton("openFolder")
@@ -29,21 +29,21 @@ void setup() {
     .setSize(controllerWidth, 300)
     .setBarHeight(20)
     .setItemHeight(20);
-  
-  tagsForVideo = cp5.addScrollableList("videoTags")
+
+  tagsList = cp5.addScrollableList("tagsList")
     .setPosition(20, 520)
     .setSize(controllerWidth, 300)
     .setBarHeight(20)
     .setItemHeight(20);
-    
+
   tagInput = cp5.addTextfield("tagInput")
-     .setPosition(300,520)
-     .setFocus(true)
-     .setColor(color(255,255,255))
-     ;
-  
-  
-  
+    .setPosition(300, 520)
+    .setFocus(true)
+    .setColor(color(255, 255, 255))
+    ;
+
+
+
   folderSelected(new File ("/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data/footage/"));
 }
 
@@ -77,20 +77,17 @@ public void controlEvent(ControlEvent theEvent) {
   if (theEvent.getController().getName().equals("videosList")) {
     currentVideoName = ((ScrollableList) theEvent.getController()).getItem((int) theEvent.getController().getValue()).get("text").toString();
     String moviePath = vf.folder+File.separator+currentVideoName;    
-    replaceVideo(moviePath);    
-    return;
+    replaceVideo(moviePath);  
+    replaceTags(dbGetTagsIdForVideo(currentVideoName));
   }
-
-
-  //println(theEvent);
 }
 
 public void tagInput(String theText) {
-  // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
   addTagToVideo(currentVideoName, theText);
-  
 }
+
+
 
 
 void replaceVideo(String moviePath) {
@@ -103,14 +100,25 @@ void replaceVideo(String moviePath) {
   current.loop();
 }
 
+void replaceTags(ArrayList<String> tagsId) {
+  tagsList.clear();
 
-void stop(){
-  try{
-    
-  if(connection != null) connection.close();
-  }catch (SQLException e){
+  for (String tagId : tagsId) {
+    String tag = dbGetTag(tagId);
+    tagsList.addItem(tag, tagId);
+  }
+
+  tagsList.open();
+}
+
+void stop() {
+  try {
+
+    if (connection != null) connection.close();
+  }
+  catch (SQLException e) {
     e.printStackTrace();
   }
-  
+
   super.stop();
 }

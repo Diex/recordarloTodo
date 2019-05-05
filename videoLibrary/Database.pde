@@ -81,27 +81,26 @@ int dbAddVideo(String name) {
 }
 
 void addTagToVideo(String video, String tag) {
-  
+
   String tagId = getTagId(tag); 
   String videoId = getVideoId(video);
-  
+
   if (tagId == null) {
     println("inserting: "+ tag);
     insert("tags", "tag", tag);
     tagId = getTagId(tag);
   }
-  
+
   String linkExists = getLinkId(videoId, tagId);
-  
-  if(linkExists == null) {
+
+  if (linkExists == null) {
     insertLink(videoId, tagId);
   }
-  
 }
 
-public void insertLink(String videoId, String tagId){
+public void insertLink(String videoId, String tagId) {
   String sql = "INSERT INTO links (video_id, tag_id) VALUES(?,?)";
-  try { //(Connection conn = this.connect();
+  try { 
     PreparedStatement pstmt = connection.prepareStatement(sql);
     pstmt.setString(1, videoId);
     pstmt.setString(2, tagId);
@@ -111,32 +110,24 @@ public void insertLink(String videoId, String tagId){
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
-
 }
 
 public String getLinkId(String video_id, String tag_id) {
 
-//  SELECT * FROM table
-//WHERE ROWID IN (
-//    SELECT ROWID FROM table WHERE a MATCH 'cat'
-//UNION
-//    SELECT ROWID FROM table WHERE b MATCH 'cat'
-//);
+  String sql = "SELECT link_id FROM links WHERE video_id = ?"+ 
+    "AND tag_id LIKE ?";
 
-  String sql = "SELECT link_id FROM links WHERE video_id LIKE ?"+ 
-                "AND tag_id LIKE ?";
-  
   String link_id = null;
+
   try {
 
     PreparedStatement pstmt  = connection.prepareStatement(sql);
     pstmt.setString(1, video_id);    
     pstmt.setString(2, tag_id);
     ResultSet rs  = pstmt.executeQuery();
-    
+
     while (rs.next()) {      
       link_id = rs.getString("link_id");
-      
     }
   } 
   catch (SQLException e) {
@@ -156,7 +147,7 @@ public String getTagId(String tag) {
 
     PreparedStatement pstmt  = connection.prepareStatement(sql);
     pstmt.setString(1, tag);
-    
+
     ResultSet rs  = pstmt.executeQuery();
     while (rs.next()) {
       tag_id = rs.getString("tag_id");
@@ -172,15 +163,17 @@ public String getTagId(String tag) {
 public String getVideoId(String name) {
 
   String sql = "SELECT * "
-    + "FROM videos WHERE name LIKE ?";
+    + "FROM videos WHERE name = ?";
+    
   String video_id = null;
+  
   try {
 
     PreparedStatement pstmt  = connection.prepareStatement(sql);
     pstmt.setString(1, name);
-    
     ResultSet rs  = pstmt.executeQuery();
     while (rs.next()) {
+      println(rs.getString("video_id"));
       video_id = rs.getString("video_id");
     }
   } 
@@ -202,4 +195,55 @@ public void insert(String table, String field, String value) {
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
+}
+
+public ArrayList<String> dbGetTagsIdForVideo(String moviePath) {
+ 
+  ArrayList<String> tags = new ArrayList<String>();  
+  String videoId = getVideoId(moviePath);
+  String sql = "SELECT * "
+    + "FROM links WHERE video_id = ?";
+
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, videoId);    
+    ResultSet rs  = pstmt.executeQuery();
+
+    while (rs.next()) {
+      String tagId = rs.getString("tag_id");
+      println(tagId);
+      tags.add(tagId);      
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+  
+  
+  return tags;
+}
+
+public String dbGetTag(String tagId){
+  
+  String tag = null;
+  
+   String sql = "SELECT * "
+    + "FROM tags WHERE tag_id = ?";
+
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, tagId);    
+    ResultSet rs  = pstmt.executeQuery();
+
+    while (rs.next()) {
+      
+      tag = rs.getString("tag");      
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+  return tag;
 }
