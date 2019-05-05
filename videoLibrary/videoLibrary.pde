@@ -5,15 +5,17 @@ import controlP5.*;
 ControlP5 cp5;
 
 ScrollableList videosList;
+ScrollableList tagsForVideo;
+Textfield tagInput;
 
 int controllerWidth = 250;
 
 
 void setup() {
   size(1200, 800, P3D);
-  //setupConsole();
+  
   cp5 = new ControlP5(this);
-  // create a new button with name 'buttonA'
+
   cp5.addButton("openFolder")
     .setLabel("Open data folder")
     .setId(02)
@@ -22,12 +24,26 @@ void setup() {
     .getCaptionLabel().align(CENTER, CENTER)
     ;
 
-  /* add a ScrollableList, by default it behaves like a DropdownList */
   videosList = cp5.addScrollableList("videosList")
     .setPosition(20, 60)
     .setSize(controllerWidth, 300)
     .setBarHeight(20)
     .setItemHeight(20);
+  
+  tagsForVideo = cp5.addScrollableList("videoTags")
+    .setPosition(20, 520)
+    .setSize(controllerWidth, 300)
+    .setBarHeight(20)
+    .setItemHeight(20);
+    
+  tagInput = cp5.addTextfield("tagInput")
+     .setPosition(300,520)
+     .setFocus(true)
+     .setColor(color(255,255,255))
+     ;
+  
+  
+  
   folderSelected(new File ("/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data/footage/"));
 }
 
@@ -49,6 +65,7 @@ void movieEvent(Movie m) {
 
 
 
+String currentVideoName;
 
 public void controlEvent(ControlEvent theEvent) {
 
@@ -58,14 +75,21 @@ public void controlEvent(ControlEvent theEvent) {
   }
 
   if (theEvent.getController().getName().equals("videosList")) {
-    String movieName = ((ScrollableList) theEvent.getController()).getItem((int) theEvent.getController().getValue()).get("text").toString();
-    String moviePath = vf.folder+File.separator+movieName;    
+    currentVideoName = ((ScrollableList) theEvent.getController()).getItem((int) theEvent.getController().getValue()).get("text").toString();
+    String moviePath = vf.folder+File.separator+currentVideoName;    
     replaceVideo(moviePath);    
     return;
   }
 
 
-  println(theEvent);
+  //println(theEvent);
+}
+
+public void tagInput(String theText) {
+  // automatically receives results from controller input
+  //println("a textfield event for controller 'input' : "+theText);
+  addTagToVideo(currentVideoName, theText);
+  
 }
 
 

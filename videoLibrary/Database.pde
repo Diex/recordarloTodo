@@ -28,7 +28,10 @@ void dbConnect(VideoFolder vf) {
 
     Statement statement = connection.createStatement();
     statement.setQueryTimeout(30);  // set timeout to 30 sec.
-    statement.executeQuery("CREATE TABLE IF NOT EXISTS videos (video_id INTEGER PRIMARY KEY, name TEXT NOT NULL);");
+    statement.addBatch("CREATE TABLE IF NOT EXISTS videos (video_id INTEGER PRIMARY KEY, name TEXT NOT NULL);");
+    statement.addBatch("CREATE TABLE IF NOT EXISTS tags (tag_id INTEGER PRIMARY KEY, tag TEXT NOT NULL);");
+    statement.addBatch("CREATE TABLE IF NOT EXISTS links (link_id INTEGER PRIMARY KEY, video_id TEXT NOT NULL, tag_id TEXT NOT NULL);");
+    statement.executeBatch();
 
     //ResultSet rs = statement.executeQuery("select * from person");
     //while(rs.next())
@@ -61,6 +64,9 @@ void dbConnect(VideoFolder vf) {
 
 
 void dbAddFiles(VideoFolder vf) {
+
+  // TODO limpiar la db si el file no está lo saco de la tabla
+
   for (String video : vf.files) {
     dbAddVideo(video);
   }
@@ -69,49 +75,128 @@ void dbAddFiles(VideoFolder vf) {
 int dbAddVideo(String name) {
   if (getVideoId(name) == null) {
     println("inserting: "+ name);
-    insert(name);
+    insert("videos", "name", name);
   }
   return 0;
 }
 
+void addTagToVideo(String video, String tag) {
+  
+  String tagId = getTagId(tag); 
+  String videoId = getVideoId(video);
+  
+  if (tagId == null) {
+    println("inserting: "+ tag);
+    insert("tags", "tag", tag);
+    tagId = getTagId(tag);
+  }
+  
+  String linkExists = getLinkId(videoId, tagId);
+  
+  if(linkExists == null) {
+    insertLink(videoId, tagId);
+  }
+  
+}
 
+public void insertLink(String videoId, String tagId){
+  String sql = "INSERT INTO links (video_id, tag_id) VALUES(?,?)";
+  try { //(Connection conn = this.connect();
+    PreparedStatement pstmt = connection.prepareStatement(sql);
+    pstmt.setString(1, videoId);
+    pstmt.setString(2, tagId);
+    pstmt.executeUpdate();
+    println("inserting: "+videoId+" -> "+tagId);
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
 
-public String getVideoId(String name) {
+}
 
-  String sql = "SELECT * "
-    + "FROM videos WHERE name LIKE ?";
+public String getLinkId(String video_id, String tag_id) {
 
-// loop through the result set
-    String video_id = null;
+//  SELECT * FROM table
+//WHERE ROWID IN (
+//    SELECT ROWID FROM table WHERE a MATCH 'cat'
+//UNION
+//    SELECT ROWID FROM table WHERE b MATCH 'cat'
+//);
 
+  String sql = "SELECT link_id FROM links WHERE video_id LIKE ?"+ 
+                "AND tag_id LIKE ?";
+  
+  String link_id = null;
   try {
 
     PreparedStatement pstmt  = connection.prepareStatement(sql);
-
-    pstmt.setString(1, name);
+    pstmt.setString(1, video_id);    
+    pstmt.setString(2, tag_id);
     ResultSet rs  = pstmt.executeQuery();
-
     
-    while (rs.next()) {
-      video_id = rs.getString("video_id");
-      //System.out.println(video_id);
+    while (rs.next()) {      
+      link_id = rs.getString("link_id");
+      
     }
   } 
   catch (SQLException e) {
     System.out.println(e.getMessage());
   }
-  
-  return video_id;
-  
+
+  return link_id;
 }
 
 
-public void insert(String name) {
-  String sql = "INSERT INTO videos(name) VALUES(?)";
+public String getTagId(String tag) {
 
+  String sql = "SELECT * "
+    + "FROM tags WHERE tag LIKE ?";
+  String tag_id = null;
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, tag);
+    
+    ResultSet rs  = pstmt.executeQuery();
+    while (rs.next()) {
+      tag_id = rs.getString("tag_id");
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+
+  return tag_id;
+}
+
+public String getVideoId(String name) {
+
+  String sql = "SELECT * "
+    + "FROM videos WHERE name LIKE ?";
+  String video_id = null;
+  try {
+
+    PreparedStatement pstmt  = connection.prepareStatement(sql);
+    pstmt.setString(1, name);
+    
+    ResultSet rs  = pstmt.executeQuery();
+    while (rs.next()) {
+      video_id = rs.getString("video_id");
+    }
+  } 
+  catch (SQLException e) {
+    System.out.println(e.getMessage());
+  }
+
+  return video_id;
+}
+
+
+public void insert(String table, String field, String value) {
+  String sql = "INSERT INTO "+table+"("+field+") VALUES(?)";
   try { //(Connection conn = this.connect();
     PreparedStatement pstmt = connection.prepareStatement(sql);
-    pstmt.setString(1, name);
+    pstmt.setString(1, value);
     pstmt.executeUpdate();
   } 
   catch (SQLException e) {
