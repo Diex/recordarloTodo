@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -8,107 +9,79 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-public class Controller extends JFrame {
+import javax.swing.event.*;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+
+import javax.swing.text.BadLocationException;
+import java.util.*;
+import processing.core.*;
+
+public class Controller extends JFrame implements ActionListener, DocumentListener {
+
   private static final long serialVersionUID = 1L;
 
-
-  JTextField it;
+  // GUI
+  JTextField userInput;
   JTextArea log;
   JLabel state_label;
   JButton exit;
-
-  String  last_text = "";
-  float time = 0.0;
-  float total_len;
-  String state;
-  //Timer recordTimer;
-  File folder = null;   
-  final PApplet parent;
-
-  public Controller(PApplet p) {
-    super("Control");
-    this.parent = p;    
-    this.setSize(500, 100);
-
-    log = new JTextArea();
-    log.setLocation(10, 50);
-    log.setSize(500, 300);
-    log.setVisible(true);
-    log.setText("Palabras Clave:");
-    this.add(log);
-
-    try {       
-      folder = new File(settings.getString("defaultPath"));
-    }
-    catch (NullPointerException e) {
-      parent.selectFolder("Select a folder to process:", "folderSelected");
-    }
-
-    println("done");
+  JButton getWordsBtn;
+  JButton newPerson;
+  
+  PApplet parent;
 
 
-    /*
-
-     File[] listOfFiles = folder.listFiles();
-     
-     for (File file : listOfFiles) {
-     if (file.isDirectory()) {
-     //VideoFolder vf = new VideoFolder(file);
-     //keywords.add(vf);
-     //log.append("\n   "+vf.keyword() + " ("+vf.size()+")");
-     }
-     }
-     */
-
-    this.setLayout(null);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setSize(640, 480);
-
-    it = new JTextField();
-    it.setLocation(10, 10);
-    it.setSize(300, 30);
-    it.setVisible(true);
-
-    it.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        println("Se apreto tecla sobre ventana fea");
-        //enter();
-      }
-    }
-    );
-    this.add(it);
-
-    state_label = new JLabel("-");
-    state_label.setLocation(310, 10);
-    state_label.setSize(80, 30);
-    state_label.setVisible(true);
-    this.add(state_label);
-    this.setVisible(true);
-
-    exit = new JButton("exit");
-    exit.setLocation(310, 350);
-    exit.setSize(80, 30);
-    exit.setVisible(true);
-    exit.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        //println("Se apreto tecla sobre ventana fea");
-        //enter();
-        parent.exit();
-      }
-    }
-    );
-    
-    this.add(exit);
-    this.setVisible(true);
-
-    //recordTimer = new Timer();
-    //recordTimer.setDurationInSeconds(30);
-    //println("Duracion de Grabacion: " + recordTimer.getTotalTime());
-
-
-    //}
+  public Controller(PApplet p) {    
+    super("Control");    
+    this.parent = p;        
+    createGui();
   }
 
+  
+  public void warn(DocumentEvent e) {
+    if (e.getLength() <= 0) {
+      //JOptionPane.showMessageDialog(null, 
+      //  "Error: Please enter number bigger than 0", "Error Message", 
+      //  JOptionPane.ERROR_MESSAGE);
+    }
+  }
+  
+  public void clearInput(){
+    userInput.setText("");
+  }
+  
+  public void newPerson(){
+    parent.key = 'p';
+    parent.keyPressed();
+  }
+  
+  public HashSet<String> getWords(){
+    log.setText("");
+    println("getwords.");    
+    String text = "";    
+    try{
+       text = userInput.getText();
+    }catch (Exception e){
+       e.printStackTrace();
+    }
+    
+    String[] words = text.split(" ");
+    Arrays.sort(words);    
+    HashSet <String> uniqueWords = new HashSet<String>(Arrays.asList(words));
+    for(String s : uniqueWords){
+      log.append(s+'\n');      
+      println(s);
+    }
+    
+    userInput.setText("");
+    return uniqueWords;
+  }
+
+
+  private void println(String s) {
+    System.out.println(s);
+  }
   public void in() {
     ////println("Hay alguien");
     //if (state.equals("idle"))
@@ -278,27 +251,85 @@ public class Controller extends JFrame {
   //  ws.add(w);
   //}
 
-  // se llama cuando el usuario elije la carpeta
-  File folderSelected(File selection) {
-    if (selection == null) {
-      println("Window was closed or the user hit cancel.");
-    } else {
-      println("User selected " + selection.getAbsolutePath());
-      settings.setString("defaultPath", selection.getAbsolutePath());
 
-      this.folder = selection;
-      //vf = new VideoFolder(selection);
-      //videosList.clear();    
-      //videosList.addItems(vf.files);
-      //videosList.open();
-      //dbConnect(vf);
-      //dbAddFiles(vf);
-      //replaceTagsList(null);
-    }
+  int componentWidth = 400;
+  int componentHeight = 200;
+  int leftMargin = 10;
 
-    return selection;
+  void createGui() {
+    this.setLayout(null);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setSize(640, 480);
+
+
+    userInput = new JTextField();
+    userInput.setSize(componentWidth, 30);    
+    userInput.setLocation(leftMargin, 10);
+    userInput.setVisible(true);
+    userInput.addActionListener(this);
+    userInput.getDocument().addDocumentListener(this);
+    this.add(userInput);
+
+    log = new JTextArea();    
+    log.setSize(componentWidth, componentHeight);
+    log.setLocation(leftMargin, 50);
+    log.setVisible(true);
+    log.setText("Palabras Clave:");    
+    this.add(log);
+
+
+
+    state_label = new JLabel("-");
+    state_label.setLocation(componentWidth+leftMargin*2, 10);
+    state_label.setSize(80, 30);
+    state_label.setVisible(true);    
+    this.setVisible(true);
+    this.add(state_label);
+
+
+    exit = new JButton("exit");
+    exit.setLocation(310, 350);
+    exit.setSize(200, 30); 
+    exit.setActionCommand("exit");
+    exit.setVisible(true);
+    exit.addActionListener(this);
+    this.add(exit);
+
+    getWordsBtn = new JButton("get words");
+    getWordsBtn.setLocation(310, 380);
+    getWordsBtn.setSize(200, 30);
+    getWordsBtn.setActionCommand("getWords");
+    getWordsBtn.setVisible(true);
+    getWordsBtn.addActionListener(this);
+    this.add(getWordsBtn);
+    
+    newPerson = new JButton("new Person");
+    newPerson.setLocation(310, 410);
+    newPerson.setSize(200, 30);
+    newPerson.setActionCommand("newPerson");
+    newPerson.setVisible(true);
+    newPerson.addActionListener(this);
+    this.add(newPerson);
   }
-  /*
- 
-   */
+  
+  // interfases
+  @Override
+    public void actionPerformed(ActionEvent e) {   
+    if (e.getActionCommand().equals("exit")) parent.exit();
+    if (e.getActionCommand().equals("getWords")) getWords();
+    if (e.getActionCommand().equals("newPerson")) newPerson();
+  }
+
+  @Override
+    public void changedUpdate(DocumentEvent e) {
+      //this.setVisible(true);
+  }
+  @Override
+    public void removeUpdate(DocumentEvent e) {
+  }
+
+  @Override
+    public void insertUpdate(DocumentEvent e) {
+  }
+
 }

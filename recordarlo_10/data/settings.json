@@ -1,10 +1,1 @@
-{
-  "defaultPath": "/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data/footage",
-  "screens": {
-    "idle": "idle.mp4",
-    "query": "intro.mp4",
-    "recording": "record.mp4",
-    "error": "trash.mp4",
-    "transition": "transicion.mp4"
-  }
-}
+{"defaultPath": "/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/recordarlo_10/data"}
