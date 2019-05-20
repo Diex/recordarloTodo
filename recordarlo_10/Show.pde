@@ -1,21 +1,23 @@
 public class Show extends PApplet {
   
+  Movie currentMovie;
+  
   public void settings(){
     this.size(1024, 768);
-    fullScreen();
+    fullScreen(1);
+    //frameRate(60);
   }
+  
+  
   public void draw() {
     background(0);
-    if (movie != null) {
-      image(movie, 0, 0, this.width, this.height);
-    }
-
-    if (frameCount > 500) {
-      //if (c.it != null && !c.it.hasFocus()) {
-      //  c.it.requestFocus();
-      //}
+    if (currentMovie != null) {
+      int x = (this.width-currentMovie.width)/2;
+      int y = (this.height-currentMovie.height)/2;
+      image(currentMovie, x, y, currentMovie.width, currentMovie.height);
     }
   }
+  
   public void load_video(String v) {
     new_movie(v);
     //last_time = 0.0;
@@ -24,29 +26,28 @@ public class Show extends PApplet {
 
 
   void mousePressed() {
-    c.state = "idle";
+    controller.state = "idle";
     //smoothPrevious = 120;
     println("------------------------------------- MOUSE PRESIONADO");
   }
-}
-
-
-// ===========================================================
+  
+  // ===========================================================
 void new_movie(String v) {
-  if (movie != null) {
-    movie.dispose();
-    println("-|| DISPOSING MOVIE");
+  if (currentMovie != null) {
+    currentMovie.dispose();
+    //println("-|| DISPOSING MOVIE");
   }
-  movie = null;
+  currentMovie = null;
 
-  println("-|| LOADING MOVIE: " + v);
+  //println("-|| LOADING MOVIE: " + v);
 
-  movie = new Movie(this, v);
-  movie.play();
-  delay(250);
-  println(" ==> " + v + " : " + movie.duration());
+  currentMovie = new Movie(this, v);
+  currentMovie.play();
+  //delay(250);
+  //println(" ==> " + v + " : " + movie.duration());
 }
 
 void movieEvent(Movie m) {
   m.read();
+}
 }

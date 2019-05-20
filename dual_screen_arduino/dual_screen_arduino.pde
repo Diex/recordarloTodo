@@ -1,7 +1,7 @@
 // Ruta a la carpeta "data", donde están los videos
-String path_to_videos = "/Users/ivananebuloni/Desktop/dual_screen_arduino/data";
+//String path_to_videos = "/Users/ivananebuloni/Desktop/dual_screen_arduino/data";
 //String path_to_videos = "C:/Users/HacheG.Zeta/Desktop/dual_screen/data";
-
+String path_to_videos = "/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data";
 // Ancho del video (deberia ser igual al ancho de la resolucion de la pantalla)
 int video_x = 800;
 // Alto del video (deberia ser igual al alto de la resolucion de la pantalla)
@@ -62,7 +62,7 @@ void setup() {
   //String portName = Serial.list()[5];
   frameRate(15);
   println (Serial.list());
-  streamer = new AP_Sync(this, "/dev/cu.usbmodem1411", 9600);
+  //streamer = new AP_Sync(this, "/dev/cu.usbmodem1411", 9600);
 
   String[] args = {"YourSketchNameHere"};
   show = new ShowApplet();

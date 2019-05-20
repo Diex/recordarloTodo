@@ -2,29 +2,31 @@ import processing.video.*;
 
 
 JSONObject settings;
-Movie movie;
-Controller c;
+
+Controller controller;
 Show show;
+
 void setup(){
   
   
   show = new Show();
-  String[] args = {"Show", "--fullscreen"};
+  String[] args = {"Show"};
   PApplet.runSketch(args, show);
   
-  //try {
-  //  println("trying load json");
-  //  settings = loadJSONObject("./data/settings.json");
+  try {
+    println("trying load json");
+    settings = loadJSONObject("./data/settings.json");
     
-  //}
-  //catch(Exception e) {
-  //  e.printStackTrace();
-  //  settings = new JSONObject();
-  //  settings.setString("defaultPath","data/movies/");
-  //  saveJSONObject(settings, "./data/settings.json");
-  // }
+  }
+  catch(Exception e) {
+    e.printStackTrace();
+    settings = new JSONObject();
+    settings.setString("defaultPath","data/movies/");
+    saveJSONObject(settings, "./data/settings.json");
+   }
    
-   //c = new Controller(this);
+   controller = new Controller(this);
+   
 }
 
 public void settings(){
@@ -36,4 +38,22 @@ public void settings(){
 void draw(){
 
 
+}
+
+void folderSelected(File file){
+  controller.folderSelected(file);
+}
+
+public void exit() {
+ 
+  //try {
+  //  if (connection != null) connection.close();
+  //}
+  //catch (SQLException e) {
+  //  e.printStackTrace();
+  //}
+
+  saveJSONObject(settings, "data/settings.json");
+  println("recordarlo_10 says bye bye...");
+  super.exit();
 }
