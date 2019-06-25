@@ -1,5 +1,7 @@
 import processing.video.*;
-
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 JSONObject settings;
 
@@ -15,111 +17,99 @@ int state = IDLE;
 
 Controller controller;
 
-File mediaFolder = null;   
-ScreenVideos screenVideos;
-Movie currentMovie;
+File mediaFolder;
+File screens;
+File footage;
 
 
-//public void settings() {
-//  fullScreen(1);
-//}
+//Movie currentMovie;
+
+RecordarState currentState;
+
+RecordarState idle;
 
 void setup() {
 
-  //size(640, 380);
-  // opening settings
-  try {
+  boolean resourcesOk = true;
+  
+  try {    
     settings = loadJSONObject("./data/settings.json");
-    
     println("settings.loaded");
   }
   catch(Exception e) {
-    println("settings.notExists");
+    println("settings.notExists");    
     settings = new JSONObject();
     saveJSONObject(settings, "./data/settings.json");
+    println("settings.created");
   }
 
-  // opening mediafolder
+  
   try {
-    mediaFolder = new File(settings.getString("defaultPath"));
-    println("mediaFolder.OK");
-    loadScreens();
+    String mediaFolderPath = settings.getString("defaultPath");
+    if(mediaFolderPath == null) {
+      throw new NullPointerException("settings.defaultPath.null");
+    }
+    mediaFolder = new File(mediaFolderPath);    
+    if (!mediaFolder.exists() || !mediaFolder.isDirectory()) {
+      throw new FileNotFoundException("defaultPath.notExists");
+    }
+    println("defaultPath.OK");
+    
+    screens = new File(mediaFolder.getAbsolutePath()+"/screens");
+    if (!screens.exists() || !screens.isDirectory()) {
+      throw new FileNotFoundException("defaultPath/screens.notExists");
+    }
+    println("defaultPath.screens.OK");
+    
+    footage = new File(mediaFolder.getAbsolutePath()+"/footage");
+    if (!footage.exists() || !footage.isDirectory()) {
+      throw new FileNotFoundException("defaultPath/footage.notExists");
+    }    
+    println("defaultPath.footage.OK");  
   }  
-  catch (NullPointerException e) {
+  catch (Exception e) {
     e.printStackTrace();
+    resourcesOk = false;
     selectFolder("Select a folder to process:", "onMediaFolderSelected");
   }
- 
- // fullscreen
+
+  if(resourcesOk) continueSetup();
   fullScreen(1);
+}
 
+public void continueSetup(){
+  
   String[] args = {"Show"};
-
-
   println("controller.createGui");
   controller = new Controller(this);
   println("controller.gui.created");
-
-  enterState(IDLE);
   frameRate(30);
   
-  
+  idle = new RecordarState(this, screens.getAbsolutePath()+"/idle.mp4");
+  switchState(idle);
 }
+
+
 
 void draw() {
   background(0);
-  if (currentMovie != null) {
-    int x = (this.width-currentMovie.width)/2;
-    int y = (this.height-currentMovie.height)/2;
-    
-    if( currentMovie.width > 0) image(currentMovie, x, y, currentMovie.width, currentMovie.height);
+  
+  if (currentState != null) {
+    currentState.update();
+    int x = (this.width-currentState.width)/2;
+    int y = (this.height-currentState.height)/2;
+    if ( currentState.width > 0) image(currentState, x, y, currentState.width, currentState.height);
   }
 }
 
 
-private void loadScreens() {
-  screenVideos = new ScreenVideos(this, mediaFolder);
-}
-
-public void newPerson(){
-  enterState(INTRO);
-}
-
-public void keyPressed(){
+public void keyPressed() {
   println("keyPressed", key);
-  if(key == 'p') newPerson();
+
 }
 
-public void enterState(int state) {
-  switch(state) {
-    case IDLE:
-      if(currentMovie != null) currentMovie.stop();
-      currentMovie = screenVideos.getVideo(ScreenVideos.IDLE);
-      currentMovie.jump(0.0);
-      currentMovie.loop();
-      println("controller.enterState.IDLE");
-    break;
-    
-    case INTRO:
-      if(currentMovie != null) currentMovie.stop();
-      currentMovie = screenVideos.getVideo(ScreenVideos.INTRO);
-      currentMovie.jump(0.0);
-      currentMovie.play();
-      println("controller.enterState.INTRO");
-    
-    break;
-    
-        
-    case REC:
-      if(currentMovie != null) currentMovie.stop();
-      currentMovie = screenVideos.getVideo(ScreenVideos.REC);
-      currentMovie.jump(0.0);
-      currentMovie.play();
-      println("controller.enterState.REC");    
-    break;
-  
-}
-    
+public void myMethod(String t){
+  println(t);
 }
 
 File onMediaFolderSelected(File selection) {
@@ -131,18 +121,7 @@ File onMediaFolderSelected(File selection) {
     settings.setString("defaultPath", selection.getAbsolutePath());
     saveJSONObject(settings, "./data/settings.json");    
     this.mediaFolder = selection;
-    loadScreens();
-    enterState(IDLE);
-
-
-
-    //vf = new VideoFolder(selection);
-    //videosList.clear();    
-    //videosList.addItems(vf.files);
-    //videosList.open();
-    //dbConnect(vf);
-    //dbAddFiles(vf);
-    //replaceTagsList(null);
+    continueSetup();
   }
 
   return selection;
@@ -152,21 +131,24 @@ void movieEvent(Movie m) {
   m.read();
 }
 
-public void movieEnded(){
-    println("movie.end");
-    if(currentMovie == null) return;
-    
-    if(currentMovie == screenVideos.getVideo(ScreenVideos.INTRO)){
-      enterState(REC);
-    }
-    
-    if(currentMovie == screenVideos.getVideo(ScreenVideos.REC)){
-      controller.getWords();
-      enterState(IDLE);
-    }
-    
+public void switchState(RecordarState newState){
+  if(currentState != null) currentState.onExit();
+  currentState = newState;
+  currentState.onEnter();
 }
-  
+
+public void movieEnded() {
+  println("movie.end");
+  //if (currentMovie == null) return;
+  //if (currentMovie == screenVideos.getVideo(ScreenVideos.INTRO)) {
+  //  enterState(REC);
+  //}
+  //if (currentMovie == screenVideos.getVideo(ScreenVideos.REC)) {
+  //  controller.getWords();
+  //  enterState(IDLE);
+  //}
+}
+
 
 public void exit() {
 
