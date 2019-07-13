@@ -6,11 +6,12 @@ import processing.core.*;
 public class RecordarState {
 
   Class clazz;
-  recordarlo_10 context;
+  RecordarloTodo context;
   Movie movie;
   PApplet parent;
-
-  public RecordarState(recordarlo_10 context, String file) {
+  RecordarState nextState;
+  
+  public RecordarState(RecordarloTodo context, String file) {
     parent = (PApplet) context;
     System.out.println(context.getClass());
     movie = new Movie(parent, file);
@@ -22,7 +23,7 @@ public class RecordarState {
   }
 
 
-  public void onExit() {
+  public void onExit(RecordarState nextState) {
   }
 
   public void callToAction(){

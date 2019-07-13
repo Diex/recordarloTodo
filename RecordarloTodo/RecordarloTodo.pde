@@ -27,11 +27,12 @@ File screens;
 File footage;
 
 
-RecordarState currentState;
-RecordarState idle;
+RecordarState currentState, idle, intro, rec;
 
 PrintWriter errors;
 boolean withErrors = false;
+
+public boolean isSomeone = false;
 
 void setup() {
 
@@ -92,13 +93,20 @@ public void continueSetup() {
   controller = new Controller(this);
   frameRate(30);
   idle = new IdleState(this, screens.getAbsolutePath()+"/idle.mp4");
+  intro = new IntroState(this, screens.getAbsolutePath()+"/intro.mp4");
+  rec = new RecState(this, screens.getAbsolutePath()+"/record.mp4");
   switchState(idle);
+  idle.onEnter();
+  currentState = idle;
 }
 
 
 
 void draw() {
   background(0);
+  
+  
+  
   if (currentState != null) {
     currentState.update();
     currentState.render();    
@@ -108,18 +116,22 @@ void draw() {
 
 public void keyPressed() {
   println("keyPressed", key);
-  if(key == ' ') currentState.callToAction();
+  if(key == ' ') seatChanged();
+  
+  
+   
+  
   if(key == 'a') currentState.onEnter();
 }
 
-public void myMethod(String t) {
-  println(t);
+public void seatChanged(){
+  isSomeone = !isSomeone;
+  currentState.callToAction();
 }
 
-public void setState(RecordarState state){
-  currentState.onExit();
-  currentState = state;
-  currentState.onEnter();
+
+public void myMethod(String t) {
+  println(t);
 }
 
 
@@ -144,9 +156,9 @@ void movieEvent(Movie m) {
 }
 
 public void switchState(RecordarState newState) {
-  if (currentState != null) currentState.onExit();
-  currentState = newState;
-  currentState.onEnter();
+  if (currentState != null) currentState.onExit(newState);
+  //currentState = newState;
+  //currentState.onEnter();
 }
 
 public void movieEnded() {

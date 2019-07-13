@@ -3,13 +3,13 @@ import de.looksgood.ani.easing.*;
 
 
 
-class IdleState extends RecordarState{
+class RecState extends RecordarState{
   
   Ani fadeIn,fadeOut;
   float alpha = 0.0f;
   
   
-  public IdleState (RecordarloTodo context, String file){
+  public RecState (RecordarloTodo context, String file){
     super(context, file);
     Ani.init(parent);
   }
@@ -30,19 +30,19 @@ class IdleState extends RecordarState{
   
   
   public void onExit(RecordarState nextState){
-    this.nextState = nextState; 
-    fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
+    //this.nextState = nextState; 
+    //fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
   }
   
-  private void nextState(){
+    private void nextState(){
     context.currentState = nextState;
     context.currentState.onEnter();
   }
   
   public void callToAction(){
-    if(context.isSomeone){
-      context.switchState(context.intro);      
-    }
+    //if(context.isSomeone){
+    //  context.switchState(context.intro);      
+    //}
     
   }
  
