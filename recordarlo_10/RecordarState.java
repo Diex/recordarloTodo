@@ -1,49 +1,42 @@
 import processing.video.*;
 import processing.core.*;
 import java.lang.reflect.*;
+import processing.core.*;
 
-public class RecordarState extends Movie{
+public class RecordarState {
 
-  Class<?> clazz;
-  Object something;
-    
-    
-  public RecordarState(Object parent, String file){
-    super((PApplet) parent, file);
-     clazz = parent.getClass();
-     //c = parent.getClass();
-     something = parent;
+  Class clazz;
+  Object context;
+  Movie movie;
+  PApplet parent;
+
+  public RecordarState(Object context, String file) {
+    parent = (PApplet) context;
+    movie = new Movie(parent, file);
+    clazz = context.getClass();
+    this.context = context;
   }
 
-  public void onEnter(){
-    this.jump(0.0f);
-    this.loop();
+  public void onEnter() {
   }
-  
-  
-  public void onExit(){
-    this.stop();
+
+
+  public void onExit() {
   }
-  
-  public void update(){
-    //if(time() >= duration()){
-      
-      //Class c = parent.getClass();
-      
-      try {                
-        // Call method from obj
-          Method method = clazz.getMethod("myMethod", "".getClass());
-        method.invoke(something, "blabla");
-    
-         //c.getMethod("myMethod").invoke(something, ""+(duration()-time()));
-      } catch(Exception e) {
-         e.printStackTrace();         
-      }
- 
-      //parent.method("println", ); // Java only!
-    }
-  
-  //}
-  
-  
+
+  public void update() {
+
+    // reflection
+    //try {                
+    //  // Call method from obj
+    //  Method method = clazz.getMethod("myMethod", "".getClass());
+    //  method.invoke(something, "blabla");  
+    //   //c.getMethod("myMethod").invoke(something, ""+(duration()-time()));
+    //} catch(Exception e) {
+    //   e.printStackTrace();         
+    //}
+  }
+
+  public void render() {
+  }
 }

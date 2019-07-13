@@ -2,6 +2,8 @@ import processing.video.*;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Scanner;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 JSONObject settings;
 
@@ -22,70 +24,72 @@ File screens;
 File footage;
 
 
-//Movie currentMovie;
-
 RecordarState currentState;
-
 RecordarState idle;
+
+PrintWriter errors;
+boolean withErrors = false;
 
 void setup() {
 
   boolean resourcesOk = true;
-  
+  Date d = new Date();
+
+  errors = createWriter("errors_"+d.getTime()+".txt");
+
+
   try {    
-    settings = loadJSONObject("./data/settings.json");
+    settings = loadJSONObject("settings.json");
     println("settings.loaded");
   }
   catch(Exception e) {
-    println("settings.notExists");    
-    settings = new JSONObject();
-    saveJSONObject(settings, "./data/settings.json");
-    println("settings.created");
+    println("settings.notExists");
+    errors.println("settings.notExists");
+    exit();
   }
 
-  
   try {
     String mediaFolderPath = settings.getString("defaultPath");
-    if(mediaFolderPath == null) {
+    if (mediaFolderPath == null) {
+      errors.println("settings.defaultPath.null");
       throw new NullPointerException("settings.defaultPath.null");
     }
+
     mediaFolder = new File(mediaFolderPath);    
     if (!mediaFolder.exists() || !mediaFolder.isDirectory()) {
+      errors.println("defaultPath.notExists");
       throw new FileNotFoundException("defaultPath.notExists");
     }
-    println("defaultPath.OK");
-    
+
     screens = new File(mediaFolder.getAbsolutePath()+"/screens");
     if (!screens.exists() || !screens.isDirectory()) {
+      errors.println("defaultPath/screens.notExists");
       throw new FileNotFoundException("defaultPath/screens.notExists");
     }
-    println("defaultPath.screens.OK");
-    
+
     footage = new File(mediaFolder.getAbsolutePath()+"/footage");
     if (!footage.exists() || !footage.isDirectory()) {
+      errors.println("defaultPath/footage.notExists");
       throw new FileNotFoundException("defaultPath/footage.notExists");
-    }    
-    println("defaultPath.footage.OK");  
+    }
   }  
   catch (Exception e) {
     e.printStackTrace();
     resourcesOk = false;
-    selectFolder("Select a folder to process:", "onMediaFolderSelected");
+    exit();
   }
 
-  if(resourcesOk) continueSetup();
+  if (resourcesOk) continueSetup();
   fullScreen(1);
 }
 
-public void continueSetup(){
-  
+
+public void continueSetup() {
+
   String[] args = {"Show"};
-  println("controller.createGui");
   controller = new Controller(this);
-  println("controller.gui.created");
   frameRate(30);
-  
-  idle = new RecordarState(this, screens.getAbsolutePath()+"/idle.mp4");
+  idle = new IdleState(this, screens.getAbsolutePath()+"/idle.mp4");
   switchState(idle);
 }
 
@@ -93,24 +97,30 @@ public void continueSetup(){
 
 void draw() {
   background(0);
-  
+
   if (currentState != null) {
     currentState.update();
-    int x = (this.width-currentState.width)/2;
-    int y = (this.height-currentState.height)/2;
-    if ( currentState.width > 0) image(currentState, x, y, currentState.width, currentState.height);
+    currentState.render();
+    
   }
 }
 
 
 public void keyPressed() {
   println("keyPressed", key);
-
 }
 
-public void myMethod(String t){
+public void myMethod(String t) {
   println(t);
 }
+
+public void setState(RecordarState state){
+  currentState.onExit();
+  currentState = state;
+  currentState.onEnter();
+}
+
+
 
 File onMediaFolderSelected(File selection) {
   if (selection == null) {
@@ -131,8 +141,8 @@ void movieEvent(Movie m) {
   m.read();
 }
 
-public void switchState(RecordarState newState){
-  if(currentState != null) currentState.onExit();
+public void switchState(RecordarState newState) {
+  if (currentState != null) currentState.onExit();
   currentState = newState;
   currentState.onEnter();
 }
@@ -152,14 +162,12 @@ public void movieEnded() {
 
 public void exit() {
 
-  //try {
-  //  if (connection != null) connection.close();
-  //}
-  //catch (SQLException e) {
-  //  e.printStackTrace();
-  //}
+  errors.println("recordarlo todo says bye bye...");
+  errors.flush(); // Writes the remaining data to the file
+  errors.close(); // Finishes the file
 
-  saveJSONObject(settings, "data/settings.json");
+  //saveJSONObject(settings, "data/settings.json");
   println("recordarlo_10 says bye bye...");
+
   super.exit();
 }
