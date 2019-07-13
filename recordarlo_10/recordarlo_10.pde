@@ -4,6 +4,9 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import de.looksgood.ani.*;
+import de.looksgood.ani.easing.*;
+
 
 JSONObject settings;
 
@@ -106,8 +109,12 @@ void draw() {
 }
 
 
+
+
 public void keyPressed() {
   println("keyPressed", key);
+  if(key == ' ') currentState.onExit();
+  if(key == 'a') currentState.onEnter();
 }
 
 public void myMethod(String t) {
