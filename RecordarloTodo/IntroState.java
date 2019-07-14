@@ -12,7 +12,7 @@ class IntroState extends RecordarState{
   
   public IntroState (RecordarloTodo context, String file){
     super(context, file);
-    Ani.init(parent);
+    //Ani.init(parent);
   }
 
   public void onEnter(){    
@@ -40,6 +40,7 @@ class IntroState extends RecordarState{
   private void nextState(){
     context.currentState = context.rec;
     context.currentState.onEnter();
+    movie.stop();
   }
   
   public void onExit(){

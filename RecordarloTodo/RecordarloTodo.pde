@@ -10,37 +10,24 @@ import de.looksgood.ani.easing.*;
 
 JSONObject settings;
 
-// controller
-public final int IDLE = 0;
-public final int INTRO = 1;
-public final int REC = 2;
-public final int TRASH = 3;
-public final int TRANSITION = 4;
-
-int state = IDLE;
-
-
 Controller controller;
 
-File mediaFolder;
-File screens;
-File footage;
+File mediaFolder, screens, footage;
 
-
-RecordarState currentState, idle, intro, rec;
+RecordarState currentState, idle, intro, rec, process;
+MemoryState memory;
 
 PrintWriter errors;
 boolean withErrors = false;
 
 public boolean isSomeone = false;
 
+SearchCriteria search;
+
 void setup() {
-
-  boolean resourcesOk = true;
+  
   Date d = new Date();
-
   errors = createWriter("errors_"+d.getTime()+".txt");
-
 
   try {    
     settings = loadJSONObject("settings.json");
@@ -79,11 +66,11 @@ void setup() {
   }  
   catch (Exception e) {
     e.printStackTrace();
-    resourcesOk = false;
+
     exit();
   }
 
-  if (resourcesOk) continueSetup();
+  continueSetup();
   fullScreen(1);
 }
 
@@ -92,96 +79,84 @@ public void continueSetup() {
   String[] args = {"Show"};
   controller = new Controller(this);
   frameRate(30);
+  Ani.init(this);
+  
+  try{
   idle = new IdleState(this, screens.getAbsolutePath()+"/idle.mp4");
   intro = new IntroState(this, screens.getAbsolutePath()+"/intro.mp4");
   rec = new RecState(this, screens.getAbsolutePath()+"/record.mp4");
-  switchState(idle);
-  idle.onEnter();
-  currentState = idle;
+  process = new ProcessState(this, screens.getAbsolutePath()+"/transicion.mp4");
+  
+  }catch (Exception e){
+    e.printStackTrace();
+    errors.println(e.toString());
+    exit();
+  }
+  
+  folderSelected(new File (settings.getString("defaultPath")+"/footage"));
+  
+  currentState = rec;
+  rec.onEnter();
+  
+  search = new SearchCriteria(); 
+  
 }
 
 
-
-void draw() {
+  // se llama cuando el usuario elije la carpeta
+void folderSelected(File selection) {
+    vf = new VideoFolder(selection);
+    dbConnect(vf);
+}
+ 
+void draw() {  
   background(0);
-  
-  
-  
   if (currentState != null) {
     currentState.update();
-    currentState.render();    
+    currentState.render();
   }
 }
 
 
 public void keyPressed() {
-  println("keyPressed", key);
-  if(key == ' ') seatChanged();
-  
-  
-   
-  
-  if(key == 'a') currentState.onEnter();
+  println("keyPressed", keyCode);
+  if (key == 'p') seatChanged();
+  if (key == 'a') currentState.onEnter();
+  if (key == 'r') randomTags();
 }
 
-public void seatChanged(){
+void randomTags() {
+  
+  String[] tags = dbGetRandomTags(4);  
+  String tagString = "";
+  for(String tag : tags) tagString += tag+' ';    
+  controller.userInput.setText(tagString);
+}
+
+// TODO interfaz con el sensor
+public void seatChanged() {
   isSomeone = !isSomeone;
   currentState.callToAction();
 }
 
-
-public void myMethod(String t) {
-  println(t);
-}
-
-
-
-File onMediaFolderSelected(File selection) {
-  if (selection == null) {
-    println("Window was closed or the user hit cancel.");
-    exit();
-  } else {
-    println("mediaFolder." + selection.getAbsolutePath());
-    settings.setString("defaultPath", selection.getAbsolutePath());
-    saveJSONObject(settings, "./data/settings.json");    
-    this.mediaFolder = selection;
-    continueSetup();
-  }
-
-  return selection;
-}
 
 void movieEvent(Movie m) {
   m.read();
 }
 
 public void switchState(RecordarState newState) {
-  if (currentState != null) currentState.onExit(newState);
-  //currentState = newState;
-  //currentState.onEnter();
+  if (currentState != null) {
+    currentState.onExit(newState);
+    controller.state_label.setText(newState.getClass().getName());
+  }
 }
-
-public void movieEnded() {
-  println("movie.end");
-  //if (currentMovie == null) return;
-  //if (currentMovie == screenVideos.getVideo(ScreenVideos.INTRO)) {
-  //  enterState(REC);
-  //}
-  //if (currentMovie == screenVideos.getVideo(ScreenVideos.REC)) {
-  //  controller.getWords();
-  //  enterState(IDLE);
-  //}
-}
-
 
 public void exit() {
-
+  controller.openDictation();
   errors.println("recordarlo todo says bye bye...");
   errors.flush(); // Writes the remaining data to the file
   errors.close(); // Finishes the file
-
-  //saveJSONObject(settings, "data/settings.json");
   println("recordarlo_10 says bye bye...");
-
+  
   super.exit();
 }

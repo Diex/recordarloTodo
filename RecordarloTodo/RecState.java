@@ -5,18 +5,25 @@ import de.looksgood.ani.easing.*;
 
 class RecState extends RecordarState{
   
-  Ani fadeIn,fadeOut;
+  Ani fadeIn,fadeOut, changeState;
+  float dummy = 0.0f;
   float alpha = 0.0f;
-  
+  float movieDuration;
   
   public RecState (RecordarloTodo context, String file){
     super(context, file);
-    Ani.init(parent);
+    //Ani.init(parent);
   }
 
   public void onEnter(){    
+    //System.out.println("enter recState");
+    context.controller.clearInput();
     movie.loop();
-    fadeIn = new Ani(this, 1, "alpha", 1.0f );      
+    movieDuration = movie.duration();
+    fadeIn = new Ani(this, 1, "alpha", 1.0f );
+    //ENGANA PICHANGA movieDuration-2
+    changeState = new Ani(this, 10, "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoProcess");
+    
   }
   
   public void render(){    
@@ -28,21 +35,22 @@ class RecState extends RecordarState{
     }
   }
   
-  
-  public void onExit(RecordarState nextState){
-    //this.nextState = nextState; 
-    //fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
+  private void gotoProcess(){
+     fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );                 
   }
   
-    private void nextState(){
-    context.currentState = nextState;
+  private void nextState(){
+    context.currentState = context.process;
     context.currentState.onEnter();
+    movie.stop();
+  }
+  
+  public void onExit(){
+        
   }
   
   public void callToAction(){
-    //if(context.isSomeone){
-    //  context.switchState(context.intro);      
-    //}
+    
     
   }
  

@@ -10,8 +10,7 @@ class IdleState extends RecordarState{
   
   
   public IdleState (RecordarloTodo context, String file){
-    super(context, file);
-    Ani.init(parent);
+    super(context, file);    
   }
 
   public void onEnter(){    
@@ -37,6 +36,7 @@ class IdleState extends RecordarState{
   private void nextState(){
     context.currentState = nextState;
     context.currentState.onEnter();
+    movie.stop();
   }
   
   public void callToAction(){

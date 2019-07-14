@@ -13,13 +13,14 @@ public class RecordarState {
   
   public RecordarState(RecordarloTodo context, String file) {
     parent = (PApplet) context;
-    System.out.println(context.getClass());
+    
     movie = new Movie(parent, file);
     clazz = context.getClass();
     this.context = context;
   }
 
   public void onEnter() {
+    
   }
 
 
