@@ -28,22 +28,19 @@ class IdleState extends RecordarState{
   }
   
   
-  public void onExit(RecordarState nextState){
+  public void onExit(){
     this.nextState = nextState; 
     fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
   }
   
   private void nextState(){
-    context.currentState = nextState;
+    context.currentState = context.intro;
     context.currentState.onEnter();
     movie.stop();
   }
   
   public void callToAction(){
-    if(context.isSomeone){
-      context.switchState(context.intro);      
-    }
-    
+      onExit();          
   }
  
   

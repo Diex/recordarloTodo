@@ -8,7 +8,6 @@ class ProcessState extends RecordarState {
   Ani fadeIn, fadeOut, timeOut;
   float alpha = 0.0f;
   float dummy = 0.0f;
-  ArrayList<String> videos;
 
   public ProcessState (RecordarloTodo context, String file) {
     super(context, file);
@@ -20,23 +19,9 @@ class ProcessState extends RecordarState {
     HashSet<String> words = context.controller.getWords();
 
     ArrayList<String> usefulMovies = context.search.find(words, context.search.INTERSECTION);
+    context.usefulMovies = usefulMovies;
     
-    // 
-    //if (words.size() > 0) {
-    //  for (String w : words) {        
-    //    videos = context.dbGetVideosForTag(w);
-        
-    //    System.out.print("with tag: ");
-    //    System.out.println(w);
-    //    System.out.println("has this videos: ");
-        
-    //    for(String s : videos){
-    //      System.out.println(s);
-    //    }        
-    //  }
-    //}
-    
-    timeOut = new Ani(this, 5.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
+    timeOut = new Ani(this, 2.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
     
   }
 
@@ -59,16 +44,10 @@ class ProcessState extends RecordarState {
   }
   
   public void nextState(){
-    if(videos != null){
-      //
-      context.currentState = context.memory;    
-      context.currentState.onEnter();
-    }else{
-      context.currentState = context.rec;
-      context.currentState.onEnter();
-    }
-    
-    movie.stop();
+    movie.stop();   
+    context.currentState = context.memory;    
+    context.currentState.onEnter();
+
   }
 
   public void callToAction() {

@@ -24,7 +24,7 @@ public class RecordarState {
   }
 
 
-  public void onExit(RecordarState nextState) {
+  public void onExit() {
   }
 
   public void callToAction(){

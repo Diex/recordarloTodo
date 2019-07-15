@@ -14,8 +14,8 @@ Controller controller;
 
 File mediaFolder, screens, footage;
 
-RecordarState currentState, idle, intro, rec, process;
-MemoryState memory;
+RecordarState currentState, idle, intro, rec, process, memory;
+
 
 PrintWriter errors;
 boolean withErrors = false;
@@ -23,6 +23,7 @@ boolean withErrors = false;
 public boolean isSomeone = false;
 
 SearchCriteria search;
+ArrayList<String> usefulMovies;
 
 void setup() {
   
@@ -71,7 +72,8 @@ void setup() {
   }
 
   continueSetup();
-  fullScreen(1);
+  size(640,480);
+  //fullScreen(1);
 }
 
 
@@ -86,7 +88,7 @@ public void continueSetup() {
   intro = new IntroState(this, screens.getAbsolutePath()+"/intro.mp4");
   rec = new RecState(this, screens.getAbsolutePath()+"/record.mp4");
   process = new ProcessState(this, screens.getAbsolutePath()+"/transicion.mp4");
-  
+  memory = new MemoryState(this, screens.getAbsolutePath()+"/trash.mp4");
   }catch (Exception e){
     e.printStackTrace();
     errors.println(e.toString());
@@ -95,7 +97,10 @@ public void continueSetup() {
   
   folderSelected(new File (settings.getString("defaultPath")+"/footage"));
   
-  currentState = rec;
+  //currentState = idle;
+  //idle.onEnter();
+  
+    currentState = rec;
   rec.onEnter();
   
   search = new SearchCriteria(); 
@@ -119,36 +124,23 @@ void draw() {
 
 
 public void keyPressed() {
-  println("keyPressed", keyCode);
-  if (key == 'p') seatChanged();
+  println("keyPressed", key);
+  if (key == 'p') currentState.callToAction();
   if (key == 'a') currentState.onEnter();
   if (key == 'r') randomTags();
 }
 
-void randomTags() {
-  
+void randomTags() {  
   String[] tags = dbGetRandomTags(4);  
   String tagString = "";
   for(String tag : tags) tagString += tag+' ';    
   controller.userInput.setText(tagString);
 }
 
-// TODO interfaz con el sensor
-public void seatChanged() {
-  isSomeone = !isSomeone;
-  currentState.callToAction();
-}
 
 
 void movieEvent(Movie m) {
   m.read();
-}
-
-public void switchState(RecordarState newState) {
-  if (currentState != null) {
-    currentState.onExit(newState);
-    controller.state_label.setText(newState.getClass().getName());
-  }
 }
 
 public void exit() {

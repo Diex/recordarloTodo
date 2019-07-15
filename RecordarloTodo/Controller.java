@@ -33,6 +33,14 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
   JButton newPerson;
 
   PApplet parent;
+  
+//para apagar el ducking del dictation
+
+//roma:~ diex$ defaults write com.apple.SpeechRecognitionCore AllowAudioDucking -bool NO
+//roma:~ diex$ defaults write com.apple.speech.recognition.AppleSpeechRecognition.prefs DictationIMAllowAudioDucking -bool NO
+//roma:~ diex$ 
+
+
 
 
   public Controller(PApplet p) {    
@@ -96,7 +104,8 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
         ArrayList<String> lowerCaseWords = new ArrayList<String>();
         
         for(String w : words){
-          lowerCaseWords.add(w.toLowerCase());
+          String removedenie = w.toLowerCase().replace("ñ", "n");
+          lowerCaseWords.add(removedenie);
         }
         
         uniqueWords = new HashSet<String>(lowerCaseWords);
