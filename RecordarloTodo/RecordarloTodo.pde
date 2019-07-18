@@ -33,6 +33,7 @@ void setup() {
   try {    
     settings = loadJSONObject("settings.json");
     println("settings.loaded");
+    
   }
   catch(Exception e) {
     println("settings.notExists");
@@ -41,8 +42,10 @@ void setup() {
   }
 
   try {
+
     String mediaFolderPath = settings.getString("defaultPath");
-    if (mediaFolderPath == null) {
+    println(mediaFolderPath);    
+    if (mediaFolderPath == null || mediaFolderPath == "" ) {
       errors.println("settings.defaultPath.null");
       throw new NullPointerException("settings.defaultPath.null");
     }
@@ -67,7 +70,6 @@ void setup() {
   }  
   catch (Exception e) {
     e.printStackTrace();
-
     exit();
   }
 
@@ -144,11 +146,11 @@ void movieEvent(Movie m) {
 }
 
 public void exit() {
-  controller.openDictation();
+  
   errors.println("recordarlo todo says bye bye...");
   errors.flush(); // Writes the remaining data to the file
   errors.close(); // Finishes the file
   println("recordarlo_10 says bye bye...");
-  
+  controller.openDictation();
   super.exit();
 }
