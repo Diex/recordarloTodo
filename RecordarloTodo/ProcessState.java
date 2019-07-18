@@ -44,7 +44,7 @@ class ProcessState extends RecordarState {
   }
   
   public void nextState(){
-    movie.stop();   
+    this.movie.stop();   
     context.currentState = context.memory;    
     context.currentState.onEnter();
 

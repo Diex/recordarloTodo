@@ -152,7 +152,7 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
     userInput.setLocation(leftMargin, 10);
     userInput.setVisible(true);
     userInput.addActionListener(this);
-    userInput.getDocument().addDocumentListener(this);
+    //userInput.getDocument().addDocumentListener(this);
     this.add(userInput);
 
     log = new JTextArea();    

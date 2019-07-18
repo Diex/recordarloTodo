@@ -97,11 +97,11 @@ public void continueSetup() {
   
   folderSelected(new File (settings.getString("defaultPath")+"/footage"));
   
-  //currentState = idle;
-  //idle.onEnter();
+  currentState = idle;
+  idle.onEnter();
   
-    currentState = rec;
-  rec.onEnter();
+  //currentState = rec;
+  //rec.onEnter();
   
   search = new SearchCriteria(); 
   
