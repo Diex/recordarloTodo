@@ -15,10 +15,11 @@ class MemoryState extends RecordarState{
   int MAX_MOVIES = 5;  
   ArrayList<Movie> movies;
   boolean noMovies = false;
-  
+  Movie trash;
   
   public MemoryState (RecordarloTodo context, String file){
-    super(context, file);    
+    super(context, file);
+    trash = movie;
   }
 
   public void onEnter(){      
@@ -66,7 +67,8 @@ class MemoryState extends RecordarState{
   public void nextState(){
     clearMovies();
     context.currentState = context.idle;
-    context.currentState.onEnter();    
+    context.currentState.onEnter();
+    movie = trash;
   }
   
   private void clearMovies(){
