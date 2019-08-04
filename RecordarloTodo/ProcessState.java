@@ -34,10 +34,10 @@ class ProcessState extends RecordarState {
     }
   }
 
-  public void onExit(RecordarState nextState) {
+  //public void onExit(RecordarState nextState) {
     
      
-  }
+  //}
 
   private void gotoMemory() {
     fadeOut = new Ani(this, 1, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );

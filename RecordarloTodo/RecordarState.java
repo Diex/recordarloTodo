@@ -13,9 +13,12 @@ public class RecordarState {
   RecordarloTodo context;
   Movie movie;
   PApplet parent;
-  RecordarState nextState;
+  //RecordarState nextState;
   
   Ani fadeIn,fadeOut;
+  float fadeInTime = 0.0f;
+  float fadeOutTime = 0.0f;
+  
   float alpha = 0.0f;
   
   public RecordarState(RecordarloTodo context, String file) {
@@ -34,8 +37,8 @@ public class RecordarState {
   public void onExit() {
   }
 
-  public void callToAction(){
-  }
+  //public void callToAction(){
+  //}
   
 
   public void render(){        

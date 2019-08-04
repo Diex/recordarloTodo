@@ -128,7 +128,7 @@ void draw() {
 
 public void keyPressed() {
   println("keyPressed", key);
-  if (key == 'p') currentState.callToAction();
+  if (key == 'p') idle.onExit();
   if (key == 'a') currentState.onEnter();
   if (key == 'r') randomTags();
 }
