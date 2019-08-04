@@ -5,9 +5,6 @@ import de.looksgood.ani.easing.*;
 
 class IdleState extends RecordarState{
   
-  Ani fadeIn,fadeOut;
-  float alpha = 0.0f;
-  
   
   public IdleState (RecordarloTodo context, String file){
     super(context, file);    
@@ -15,17 +12,10 @@ class IdleState extends RecordarState{
 
   public void onEnter(){    
     movie.loop();
-    fadeIn = new Ani(this, 1, "alpha", 1.0f );      
+    fadeIn = new Ani(this, 0.0f, "alpha", 1.0f );      
   }
   
-  public void render(){    
-    int x = (parent.width-movie.width)/2;
-    int y = (parent.height-movie.height)/2;
-    if ( movie.width > 0) {
-      parent.tint(255, alpha * 255);
-      parent.image(movie, x, y, movie.width, movie.height);
-    }
-  }
+  
   
   
   public void onExit(){

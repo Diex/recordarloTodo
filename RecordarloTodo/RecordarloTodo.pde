@@ -133,6 +133,7 @@ public void keyPressed() {
   if (key == 'r') randomTags();
 }
 
+
 void randomTags() {  
   String[] tags = dbGetRandomTags(4);  
   String tagString = "";
@@ -147,7 +148,6 @@ void movieEvent(Movie m) {
 }
 
 public void exit() {
-
   errors.println("recordarlo todo says bye bye...");
   errors.flush(); // Writes the remaining data to the file
   errors.close(); // Finishes the file
