@@ -1,10 +1,7 @@
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
-
-
 class IdleState extends RecordarState{
-  
   
   public IdleState (RecordarloTodo context, String file){
     super(context, file);    
@@ -12,12 +9,10 @@ class IdleState extends RecordarState{
 
   public void onEnter(){    
     movie.loop();
-    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );      
+    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );    
   }
   
-  
   public void onExit(){
-    //this.nextState = nextState; 
     fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
   }
   
@@ -26,10 +21,4 @@ class IdleState extends RecordarState{
     context.currentState.onEnter();
     movie.stop();
   }
-  
-  public void callToAction(){
-      onExit();          
-  }
- 
-  
 }

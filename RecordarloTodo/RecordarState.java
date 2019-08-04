@@ -16,8 +16,8 @@ public class RecordarState {
   //RecordarState nextState;
   
   Ani fadeIn,fadeOut;
-  float fadeInTime = 0.0f;
-  float fadeOutTime = 0.0f;
+  float fadeInTime = 0.1f;
+  float fadeOutTime = 0.1f;
   
   float alpha = 0.0f;
   
