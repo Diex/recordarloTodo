@@ -30,8 +30,6 @@ public class RecordarState {
   public void callToAction(){
   }
   
-  public void update() {
-  }
 
   public void render() {
   }
