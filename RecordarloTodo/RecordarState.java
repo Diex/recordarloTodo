@@ -15,8 +15,8 @@ public class RecordarState {
   PApplet parent;
   Ani fadeIn,fadeOut;
  
-  float fadeInTime = 0.1f;
-  float fadeOutTime = 0.1f;  
+  float fadeInTime = 0.2f;
+  float fadeOutTime = 0.2f;  
   float alpha = 0.0f;
   
   public RecordarState(RecordarloTodo context, String file) {

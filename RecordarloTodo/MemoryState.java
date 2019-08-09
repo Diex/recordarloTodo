@@ -7,11 +7,12 @@ import processing.core.*;
 import java.lang.reflect.*;
 import processing.core.*;
 
+
 class MemoryState extends RecordarState{
   
   Ani timeOut;
   float dummy = 0;
-  float sessionTime = 10; // secs  
+  float sessionTime = 40; // secs  
   int MAX_MOVIES = 5;  
   ArrayList<Movie> movies;
   boolean noMovies = false;
@@ -32,15 +33,17 @@ class MemoryState extends RecordarState{
   
   private void loadMovies(){  
     movies = new ArrayList<Movie>();    
-    if(context.usefulMovies.size() < 1) {
+    
+    if(SearchCriteria.getInstance().usefulMovies.size() < 1) {
       noMovies = true;
       return;  /// no hay peliculas
     }
     
-    for(int qty = 0; qty < (MAX_MOVIES < context.usefulMovies.size() ? MAX_MOVIES : context.usefulMovies.size()); qty ++){
-        Movie m = new Movie(context, context.footage.getAbsolutePath()+"/"+ context.usefulMovies.get(qty));      
+    ArrayList<String> usefulMovies = SearchCriteria.getInstance().usefulMovies;
+    for(int qty = 0; qty < (MAX_MOVIES < usefulMovies.size() ? MAX_MOVIES : usefulMovies.size()); qty ++){
+        Movie m = new Movie(context, context.footage.getAbsolutePath()+"/"+ usefulMovies.get(qty));      
         movies.add(m);
-        context.println("loading: " + context.footage.getAbsolutePath()+"/"+ context.usefulMovies.get(qty));
+        context.println("loading: " + context.footage.getAbsolutePath()+"/"+ usefulMovies.get(qty));
     }    
     movie.stop();
     movie = movies.get(0);

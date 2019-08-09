@@ -23,8 +23,10 @@ public boolean isSomeone = false;
 
 SearchCriteria search;
 
-ArrayList<String> usefulMovies;
+
 Date date;
+
+
 
 void setup() {  
   date = new Date();
@@ -76,8 +78,8 @@ void setup() {
   }
 
   continueSetup();
-  size(640, 480);
-  //fullScreen(1);
+  //size(640, 480);
+  fullScreen(1);
 }
 
 
@@ -102,10 +104,11 @@ public void continueSetup() {
 
   folderSelected(new File (settings.getString("defaultPath")+"/footage"));
 
-  currentState = idle;
-  idle.onEnter();
-  //currentState = rec;
-  //rec.onEnter();
+  //currentState = idle;
+  //idle.onEnter();
+  
+  currentState = rec;
+  rec.onEnter();
 
   search = new SearchCriteria();
 }
