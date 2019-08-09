@@ -8,14 +8,15 @@ public class SearchCriteria {
   public final int INTERSECTION = 1;
   
   private static SearchCriteria instance = null;
+  RecordarDB db;
   
-  public SearchCriteria(){
-    
+  private public SearchCriteria(RecordarDB db){
+    this.db = db;  
   }
   
-  public static SearchCriteria getInstance(){
+  public static SearchCriteria getInstance(RecordarDB db){
     if(instance == null){
-      instance = new SearchCriteria();
+      instance = new SearchCriteria(db);
     }
     
     return instance;

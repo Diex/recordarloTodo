@@ -104,25 +104,27 @@ public void continueSetup() {
     exit();
   }
 
-  folderSelected();
-  File file = new File (settings.getString("defaultPath")+"/footage");
+  //folderSelected();
+  //File file = new File (settings.getString("defaultPath")+"/footage");
     
-    vf = new VideoFolder(selection);
-  String db = "jdbc:sqlite:"+vf.folder+File.separator+"videos.db";
+    //vf = new VideoFolder(selection);
+  String dbConnector = "jdbc:sqlite:"+footage+File.separator+"videos.db";
   
-  dbConnect(db);
-
+  db = new RecordarDB();  
+  db.dbConnect(dbConnector);
+  search = SearchCriteria.getInstance(db);
+  
   //currentState = idle;
   //idle.onEnter();
   
   currentState = rec;
   rec.onEnter();
 
-  search = new SearchCriteria();
+  
 }
 
-  public String get_video(int file) {
-    return this.folder.getPath() + File.separator + files.get(file);
+  public String get_video(String file) {
+    return footage.getPath() + File.separator + file;
   }
 
 //// se llama cuando el usuario elije la carpeta
@@ -148,7 +150,7 @@ public void keyPressed() {
 
 
 void randomTags() {  
-  String[] tags = dbGetRandomTags(4);  
+  String[] tags = db.dbGetRandomTags(4);  
   String tagString = "";
   for (String tag : tags) tagString += tag+' ';    
   controller.userInput.setText(tagString);

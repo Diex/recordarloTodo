@@ -34,7 +34,7 @@ class MemoryState extends RecordarState{
   private void loadMovies(){  
     movies = new ArrayList<Movie>();    
     
-    if(SearchCriteria.getInstance().usefulMovies.size() < 1) {
+    if(search.usefulMovies.size() < 1) {
       noMovies = true;
       return;  /// no hay peliculas
     }
