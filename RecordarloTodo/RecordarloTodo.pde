@@ -23,8 +23,10 @@ public boolean isSomeone = false;
 
 SearchCriteria search;
 
+RecordarDB db;
 
 Date date;
+
 
 
 
@@ -102,7 +104,13 @@ public void continueSetup() {
     exit();
   }
 
-  folderSelected(new File (settings.getString("defaultPath")+"/footage"));
+  folderSelected();
+  File file = new File (settings.getString("defaultPath")+"/footage");
+    
+    vf = new VideoFolder(selection);
+  String db = "jdbc:sqlite:"+vf.folder+File.separator+"videos.db";
+  
+  dbConnect(db);
 
   //currentState = idle;
   //idle.onEnter();
@@ -113,12 +121,14 @@ public void continueSetup() {
   search = new SearchCriteria();
 }
 
+  public String get_video(int file) {
+    return this.folder.getPath() + File.separator + files.get(file);
+  }
 
-// se llama cuando el usuario elije la carpeta
-void folderSelected(File selection) {
-  vf = new VideoFolder(selection);
-  dbConnect(vf);
-}
+//// se llama cuando el usuario elije la carpeta
+//void folderSelected(File selection) {
+
+//}
 
 
 void draw() {  
