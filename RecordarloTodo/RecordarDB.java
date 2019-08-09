@@ -259,19 +259,19 @@ class RecordarDB {
     return tag;
   }
 
+  // devuelve la lista de todos los archivos que encuentra con ese tag
   public ArrayList<String> dbGetVideosForTag(String tag) {
+    
     ArrayList<String> videos = new ArrayList<String>();  
     String tagId = dbGetTagId(tag);
-
+    
     String sql = "SELECT * "
       + "FROM links WHERE tag_id = ?";
 
     try {
-
       PreparedStatement pstmt  = connection.prepareStatement(sql);
       pstmt.setString(1, tagId);    
       ResultSet rs  = pstmt.executeQuery();
-
       while (rs.next()) {      
         videos.add(dbGetVideo(rs.getString("video_id")));
       }

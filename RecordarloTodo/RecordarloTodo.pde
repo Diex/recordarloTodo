@@ -23,7 +23,6 @@ public boolean isSomeone = false;
 
 SearchCriteria search;
 
-RecordarDB db;
 
 Date date;
 
@@ -109,10 +108,7 @@ public void continueSetup() {
     
     //vf = new VideoFolder(selection);
   String dbConnector = "jdbc:sqlite:"+footage+File.separator+"videos.db";
-  
-  db = new RecordarDB();  
-  db.dbConnect(dbConnector);
-  search = SearchCriteria.getInstance(db);
+   search = new SearchCriteria(dbConnector);
   
   //currentState = idle;
   //idle.onEnter();
@@ -150,7 +146,7 @@ public void keyPressed() {
 
 
 void randomTags() {  
-  String[] tags = db.dbGetRandomTags(4);  
+  String[] tags = search.dbGetRandomTags(4);  
   String tagString = "";
   for (String tag : tags) tagString += tag+' ';    
   controller.userInput.setText(tagString);
