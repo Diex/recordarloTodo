@@ -40,9 +40,6 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
 //roma:~ diex$ defaults write com.apple.speech.recognition.AppleSpeechRecognition.prefs DictationIMAllowAudioDucking -bool NO
 //roma:~ diex$ 
 
-
-
-
   public Controller(PApplet p) {    
     super("Control");    
     this.parent = p;        

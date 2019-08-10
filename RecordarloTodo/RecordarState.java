@@ -28,8 +28,7 @@ public class RecordarState {
   }
 
   public void onEnter() {
-    
-  }
+       }
 
 
   public void onExit() {
@@ -44,16 +43,3 @@ public class RecordarState {
     }
   }  
 }
-
-
-
-    // reflection
-    //try {                
-    //  // Call method from obj
-    //  Method method = clazz.getMethod("myMethod", "".getClass());
-    //  method.invoke(something, "blabla");  
-    //   //c.getMethod("myMethod").invoke(something, ""+(duration()-time()));
-    //} catch(Exception e) {
-    //   e.printStackTrace();         
-    //}
-  

@@ -11,12 +11,14 @@ import processing.core.*;
 class MemoryState extends RecordarState {
 
   Ani timeOut;
+  
   float dummy = 0;
   float sessionTime = 40; // secs  
-  int MAX_MOVIES = 10;  
-  ArrayList<Movie> movies;
-  //boolean noMovies = false;
+  int MAX_MOVIES = 10;
+  
   Movie trash;
+  ArrayList<Movie> movies;
+  
 
   public MemoryState (RecordarloTodo context, String file) {
     super(context, file);

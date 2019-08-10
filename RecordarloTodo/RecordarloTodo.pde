@@ -7,42 +7,25 @@ import java.text.SimpleDateFormat;
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
-
 JSONObject settings;
 
 Controller controller;
-
 File mediaFolder, screens, footage;
-
 RecordarState currentState, idle, intro, rec, process, memory;
+SearchCriteria search;
+Date date;
 
 PrintWriter errors;
 boolean withErrors = false;
 
 public boolean isSomeone = false;
 
-SearchCriteria search;
-
-
-Date date;
-
-
+public boolean isFullScreen = false;
 
 
 void setup() {  
-  date = new Date();
-  errors = createWriter("errors_"+date.getTime()+".txt");
 
-  try {    
-    settings = loadJSONObject("settings.json");
-    println("settings.loaded");
-  }
-  catch(Exception e) {
-    println("settings.notExists");
-    errors.println("settings.notExists");
-    exit();
-  }
-
+  
   try {
     // no existe settings.json
     String mediaFolderPath = settings.getString("defaultPath");
@@ -79,10 +62,32 @@ void setup() {
   }
 
   continueSetup();
-  //size(640, 480);
-  fullScreen(1);
+  
+  
 }
 
+public void settings(){
+  date = new Date();
+  errors = createWriter("errors_"+date.getTime()+".txt");
+
+  try {    
+    settings = loadJSONObject("settings.json");
+    println("settings.loaded");
+  }
+  catch(Exception e) {
+    println("settings.notExists");
+    errors.println("settings.notExists");
+    exit();
+  }
+
+  if(settings.getString("fullScreen").equals("YES")){    
+    int screen = settings.getInt("screen"); 
+    isFullScreen = true;
+    fullScreen(screen);
+  } else{
+     size(640, 480); 
+  }
+}
 
 public void continueSetup() {
   String[] args = {"Show"};
@@ -103,33 +108,27 @@ public void continueSetup() {
     exit();
   }
 
-  //folderSelected();
-  //File file = new File (settings.getString("defaultPath")+"/footage");
-    
-    //vf = new VideoFolder(selection);
   String dbConnector = "jdbc:sqlite:"+footage+File.separator+"videos.db";
-   search = new SearchCriteria(dbConnector);
-  
+  search = new SearchCriteria(dbConnector);
+
   //currentState = idle;
   //idle.onEnter();
-  
+
   currentState = rec;
   rec.onEnter();
-
+  
   
 }
+boolean flag = true;
 
-  public String get_video(String file) {
-    return footage.getPath() + File.separator + file;
+void draw() {
+  if(flag && !isFullScreen) {
+    int screenX = settings.getInt("screenX");
+    int screenY = settings.getInt("screenY");    
+    surface.setLocation(screenX, screenY);
+    flag = false;
   }
-
-//// se llama cuando el usuario elije la carpeta
-//void folderSelected(File selection) {
-
-//}
-
-
-void draw() {  
+  
   background(0);
   if (currentState != null) {
     currentState.render();
@@ -140,7 +139,6 @@ void draw() {
 public void keyPressed() {
   println("keyPressed", key);
   if (key == 'p') idle.onExit();
-  if (key == 'a') currentState.onEnter();
   if (key == 'r') randomTags();
 }
 
@@ -152,13 +150,12 @@ void randomTags() {
   controller.userInput.setText(tagString);
 }
 
-
-
 void movieEvent(Movie m) {
   m.read();
 }
 
 public void exit() {
+  
   errors.println("recordarlo todo says bye bye...");
   errors.flush(); // Writes the remaining data to the file
   errors.close(); // Finishes the file

@@ -14,11 +14,10 @@ class ProcessState extends RecordarState {
 
   public void onEnter() {    
     movie.loop();
-    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );    
-    
+    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );        
     // dispara la busqueda en la db....
     context.search.find(context.controller.getWords(), context.search.INTERSECTION);
-    // y le doy tiempo
+    // y le doy tiempo    ...
     
     timeOut = new Ani(this, 4.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
   }

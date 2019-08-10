@@ -13,9 +13,7 @@ class IntroState extends RecordarState{
   public void onEnter(){    
     movie.loop();
     fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );
-    
-    float movieDuration = movie.duration();    
-    changeState = new Ani(this, movieDuration-2, "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoRec");    
+    changeState = new Ani(this, movie.duration() - 2, "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoRec");    
   }
    
   private void gotoRec(){

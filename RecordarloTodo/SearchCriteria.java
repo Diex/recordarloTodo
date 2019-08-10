@@ -26,7 +26,6 @@ public class SearchCriteria {
     HashMap<String, Integer> movieCount = new HashMap<String, Integer>();
 
     for (String tag : words) {
-      
       ArrayList<String> matches = db.dbGetVideosForTag(tag);
 
       for (String movie : matches) {
@@ -34,7 +33,6 @@ public class SearchCriteria {
         movieCount.put(movie, (count==null) ? 1 : count+1);
       }
     }
-
 
     Comparator c = new Comparator() {
       public int compare(Object o1, Object o2) {
@@ -44,22 +42,16 @@ public class SearchCriteria {
     };
 
     Object[] a = movieCount.entrySet().toArray();
-
     Arrays.sort(a, c);
- 
     for (Object e : a) {
       String m = ((Map.Entry<String, Integer>) e).getKey();
-
       result.add(m);
-    
-
-
+      
       System.out.println(m + " : "
         + ((Map.Entry<String, Integer>) e).getValue());
     }
 
     usefulMovies = result;
-    //return result;
   }
   
   ArrayList<String> usefulMovies(){
