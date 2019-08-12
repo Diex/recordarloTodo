@@ -7,20 +7,15 @@ import processing.core.*;
 import java.lang.reflect.*;
 import processing.core.*;
 
-
 class MemoryState extends RecordarState {
-
   Ani timeOut;
-  
   float dummy = 0;
+  
   Movie trash;
-  
-  
+    
   float sessionTime = 40; // secs  
   int MAX_MOVIES = 10;
   private ArrayList<Movie> movies;
-  
-  
   boolean ready = false;  
 
   public MemoryState (RecordarloTodo context, String file) {
@@ -28,27 +23,24 @@ class MemoryState extends RecordarState {
     trash = movie;
   }
 
-  public void onEnter() {      
+  public void onEnter() {          
     System.out.println(this+":onEnter");
     ready = false;
     movies = new ArrayList<Movie>();
     alpha = 1.0f;
-    loadMovies(context.search);
+    loadMovies(context.search);    
     timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
   }
 
   private void loadMovies(SearchCriteria search) {  
-    System.out.println("loadMovies()");
-    
+    System.out.println("loadMovies()");    
     if (!search.hasMovies()) {
       System.out.println("search.hasMovies() == false");
       movie = trash;
       return;
     }
 
-    
-    ArrayList<String> um = search.usefulMovies(); 
-    
+    ArrayList<String> um = search.usefulMovies();     
     int maxMovies = um.size() > MAX_MOVIES ? MAX_MOVIES : um.size(); 
     
     for (int qty = 0; qty < maxMovies; qty ++) {

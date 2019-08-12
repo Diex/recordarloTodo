@@ -15,7 +15,7 @@ RecordarState currentState, idle, intro, rec, process, memory;
 SearchCriteria search;
 Date date;
 
-PrintWriter errors;
+
 boolean withErrors = false;
 
 public boolean isSomeone = false;
@@ -23,36 +23,70 @@ public boolean isSomeone = false;
 public boolean isFullScreen = false;
 
 
+private class Interceptor extends PrintStream
+{
+    PrintWriter errors;
+    
+    public Interceptor(OutputStream out)
+    {
+        super(out, true);
+        errors = createWriter("errors_"+date.getTime()+".txt");
+    }
+    
+    @Override
+    public void print(String s)
+    {//do what ever you like
+        
+        errors.println(s);
+        super.print(s);
+    }
+    
+    public void close(){
+      errors.flush(); // Writes the remaining data to the file
+      errors.close(); // Finishes the file
+    }
+}
+
+
+//public static void main(String[] args)
+//{
+
+//}
+
+    
 void setup() {  
 
+  PrintStream origOut = System.out;
+    PrintStream interceptor = new Interceptor(origOut);
+    System.setOut(interceptor);// just add the interceptor
   
   try {
     // no existe settings.json
     String mediaFolderPath = settings.getString("defaultPath");
     println(mediaFolderPath);    
     if (mediaFolderPath == null || mediaFolderPath == "" ) {
-      errors.println("settings.defaultPath.null");
+      System.out.println("settings.defaultPath.null");
       throw new NullPointerException("settings.defaultPath.null");
     }
 
     // no existe la carpeta
     mediaFolder = new File(mediaFolderPath);    
     if (!mediaFolder.exists() || !mediaFolder.isDirectory()) {
-      errors.println("defaultPath.notExists");
+      System.out.println("defaultPath.notExists");
       throw new FileNotFoundException("defaultPath.notExists");
     }
 
     // no existe screens en la carpeta
     screens = new File(mediaFolder.getAbsolutePath()+"/screens");
     if (!screens.exists() || !screens.isDirectory()) {
-      errors.println("defaultPath/screens.notExists");
+      System.out.println("defaultPath/screens.notExists");
       throw new FileNotFoundException("defaultPath/screens.notExists");
     }
 
     // no existe footage en la carpeta
     footage = new File(mediaFolder.getAbsolutePath()+"/footage");
     if (!footage.exists() || !footage.isDirectory()) {
-      errors.println("defaultPath/footage.notExists");
+      System.out.println("defaultPath/footage.notExists");
       throw new FileNotFoundException("defaultPath/footage.notExists");
     }
   }  
@@ -68,7 +102,7 @@ void setup() {
 
 public void settings(){
   date = new Date();
-  errors = createWriter("errors_"+date.getTime()+".txt");
+ 
 
   try {    
     settings = loadJSONObject("settings.json");
@@ -76,7 +110,7 @@ public void settings(){
   }
   catch(Exception e) {
     println("settings.notExists");
-    errors.println("settings.notExists");
+    System.out.println("settings.notExists");
     exit();
   }
 
@@ -104,7 +138,7 @@ public void continueSetup() {
   }
   catch (Exception e) {
     e.printStackTrace();
-    errors.println(e.toString());
+    System.out.println(e.toString());
     exit();
   }
 
@@ -156,9 +190,9 @@ void movieEvent(Movie m) {
 
 public void exit() {
   
-  errors.println("recordarlo todo says bye bye...");
-  errors.flush(); // Writes the remaining data to the file
-  errors.close(); // Finishes the file
+  System.out.println("recordarlo todo says bye bye...");
+  ((Interceptor) System.out).close();
+  
   println("recordarlo_10 says bye bye...");
   controller.openDictation();
   super.exit();
