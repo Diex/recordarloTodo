@@ -158,7 +158,7 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
 
     state_label = new JLabel("-");
     state_label.setLocation(componentWidth+leftMargin*2, 10);
-    state_label.setSize(80, 30);
+    state_label.setSize(100, 30);
     state_label.setVisible(true);    
     this.setVisible(true);
     this.add(state_label);

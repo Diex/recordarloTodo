@@ -16,7 +16,7 @@ class ProcessState extends RecordarState {
   public void onEnter() {    
     movie.loop();
     //fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );
-    alpha = 1.0;
+    //alpha = 1.0;
     // dispara la busqueda en la db....
     
     HashSet<String> words = context.controller.getWords();
@@ -28,7 +28,8 @@ class ProcessState extends RecordarState {
   }
 
   private void gotoMemory() {
-    fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );
+    nextState();
+    //fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );
   }
   
   public void nextState(){

@@ -13,12 +13,13 @@ class RecState extends RecordarState{
   public void onEnter(){    
     context.controller.clearInput();
     movie.loop();
-    fadeIn = new Ani(this, 1, "alpha", 1.0f );
+    //fadeIn = new Ani(this, 1, "alpha", 1.0f );
     changeState = new Ani(this, movie.duration(), "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoProcess");    
   }
   
   private void gotoProcess(){
-     fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );                 
+    nextState();
+     //fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );                 
   }
   
   private void nextState(){

@@ -31,19 +31,19 @@ class MemoryState extends RecordarState {
     ready = false;
     movies = new ArrayList<Movie>();
     alpha = 1.0f;
-    loadMovies(context.search);    
+    loadMovies(context.search);
     timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
   }
 
   private void loadMovies(SearchCriteria search) {
 
+    sessionTime = RecordarloTodo.sessionTime;
+
     if (RecordarloTodo.debug) System.out.println("loadMovies()");    
 
     if (!search.hasMovies()) {
       if (RecordarloTodo.debug) System.out.println("search.hasMovies() == false");
-      movie = trash;
-      movie.loop();
-      ready = true;
+      trash();
       return;
     }
 
@@ -51,9 +51,7 @@ class MemoryState extends RecordarState {
 
     if (um.size() < 1) {
       if (RecordarloTodo.debug) System.out.println("sessionFiltered full match !!!");
-      movie = trash;
-      movie.loop();
-      ready = true;
+      trash();
       return;
     }
 
@@ -67,6 +65,8 @@ class MemoryState extends RecordarState {
     movie.stop();
     movie = movies.get(0);
     ready = true;
+
+    
   }
 
   private ArrayList<String> sessionFiltered(ArrayList<String> um) {
@@ -83,6 +83,12 @@ class MemoryState extends RecordarState {
     return sessionFiltered;
   }
 
+  private void trash() {
+    movie = trash;
+    movie.loop();
+    ready = true;
+    sessionTime = 5;
+  }
 
   public void render() {    
     if (!ready) return;
