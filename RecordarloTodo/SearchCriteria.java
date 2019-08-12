@@ -36,6 +36,8 @@ public class SearchCriteria {
         playlist.put(movie, (score == null) ? recurrence : score+recurrence);
       }
     }
+    
+    System.out.println(this.toString()+": playlist.size(): "+playlist.size());
   }
 
 
