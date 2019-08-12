@@ -25,9 +25,7 @@ public class SearchCriteria {
     playlist = new HashMap<String, Float>();    
 
     HashSet<String> synonyms = getSynonymForWords(words);
-
-    System.out.println("synonyms: "+ synonyms);
-    
+    System.out.println("synonyms: "+ synonyms);    
     recurrence(words, playlist);
     usefulMovies = scoringSort();
   }

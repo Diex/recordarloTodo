@@ -12,9 +12,11 @@ class ProcessState extends RecordarState {
     super(context, file);
   }
 
+
   public void onEnter() {    
     movie.loop();
-    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );        
+    //fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );
+    alpha = 1.0;
     // dispara la busqueda en la db....
     
     HashSet<String> words = context.controller.getWords();

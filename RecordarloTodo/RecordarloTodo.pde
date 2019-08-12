@@ -140,17 +140,18 @@ public void continueSetup() {
   String dbConnector = "jdbc:sqlite:"+footage+File.separator+"videos.db";
   search = new SearchCriteria(dbConnector);
 
-  //currentState = idle;
-  //idle.onEnter();
+  currentState = idle;
+  idle.onEnter();
 
-  currentState = rec;
-  rec.onEnter();
+  //currentState = rec;
+  //rec.onEnter();
   
   trigger = new Trigger();
 }
 boolean flag = true;
 
 void draw() {
+  
   if (flag && !isFullScreen) {
     int screenX = settings.getInt("screenX");
     int screenY = settings.getInt("screenY");    
@@ -159,9 +160,12 @@ void draw() {
   }
 
   background(0);
+  
   trigger.update(sensor);
+  
   if (currentState != null) {
     currentState.render();
+    if(currentState == idle && trigger.active) idle.onExit();
   }
 }
 
@@ -203,7 +207,7 @@ public void serialEvent(Serial s){
   }catch (Exception e){
     //e.printStackTrace();
   }
-  if(debug) System.out.println("sensor: " + sensor);
+  //if(debug) System.out.println("sensor: " + sensor);
 }  
 
 
@@ -221,11 +225,10 @@ private class Trigger {
 
   public void update(int sensor){
     buffer[pos] = sensor;
-    pos = (pos + 1) % buffer.length;
-    
+    pos = (pos + 1) % buffer.length;    
     int avg = avg();
     active = ( avg > MIN_LIM && avg < MAX_LIM)  ? true : false;
-    if(!debug) System.out.println(MIN_LIM + " > " + avg + " < " + MAX_LIM + (active ? " * " : ""));
+    controller.state_label.setText(MIN_LIM + " > " + avg + " < " + MAX_LIM + (active ? " * " : ""));
   }
   
   int avg(){
