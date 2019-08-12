@@ -8,13 +8,11 @@ class IdleState extends RecordarState{
   }
 
   public void onEnter(){    
-    movie.loop();
-    //fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );    
+    movie.loop();    
   }
   
   public void onExit(){
     nextState();
-    //fadeOut = new Ani(this, fadeOutTime, "alpha", 0.0f, Ani.LINEAR, "onEnd:nextState" );    
   }
   
   private void nextState(){

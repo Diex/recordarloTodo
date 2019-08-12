@@ -13,7 +13,6 @@ public class RecordarState {
   RecordarloTodo context;
   Movie movie;
   PApplet parent;
-  //Ani fadeOut;
  
   float fadeInTime = 0.2f;
   float fadeOutTime = 0.2f;  

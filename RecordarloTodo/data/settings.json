@@ -6,7 +6,9 @@
 	"screen" : 2,
 	"screenX" : 640,
 	"screenY" : -640,
-	"debug" : true
+	"minSensor" : 50,
+	"maxSensor" : 60,
+	"debug" : false
 }
 
 

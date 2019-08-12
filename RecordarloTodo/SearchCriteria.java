@@ -22,34 +22,30 @@ public class SearchCriteria {
 
   public  void find(HashSet<String> words) {    
 
+    System.out.println("find: "+words);
+    
     playlist = new HashMap<String, Float>();    
 
     HashSet<String> synonyms = getSynonymForWords(words);
     System.out.println("synonyms: "+ synonyms);    
     recurrence(words, playlist);
     usefulMovies = scoringSort();
+    
   }
-
-
-
 
 
   HashSet<String> getSynonymForWords(HashSet<String> words) {
 
     HashSet<String> result = new HashSet<String>();
-
     for (String w : words) {
-      result.add(w);
-      
+      result.add(w);      
       JSONArray syns = RecordarloTodo.synonyms.getJSONArray(w);
-
       if ( syns != null) {
         for (int i = 0; i < syns.size(); i++) {
           result.add((String)syns.get(i));
         }
       }
     }
-
     return result;
   }
 

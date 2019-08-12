@@ -34,6 +34,8 @@ public boolean isFullScreen = false;
 public static boolean debug = false;
 public static int sessionTime = 40;
 public static int sessionCache = 40;
+public static int minSensor = 50;
+public static int maxSensor = 90;
 
 void setup() {  
 
@@ -116,6 +118,10 @@ public void settings() {
       break;
    }   
  }
+ 
+  minSensor = settings.getInt("minSensor");;
+  maxSensor = settings.getInt("maxSensor");;
+
 }
 
 public void continueSetup() {
@@ -162,7 +168,6 @@ void draw() {
   background(0);
   
   trigger.update(sensor);
-  
   if (currentState != null) {
     currentState.render();
     if(currentState == idle && trigger.active) idle.onExit();
@@ -207,7 +212,7 @@ public void serialEvent(Serial s){
   }catch (Exception e){
     //e.printStackTrace();
   }
-  //if(debug) System.out.println("sensor: " + sensor);
+  
 }  
 
 
@@ -216,9 +221,7 @@ private class Trigger {
   int buffer[] = new int[25 * 4]; // 4 secs... aprox
   int pos = 0;
   boolean active = false;
-  int MIN_LIM = 50;
-  int MAX_LIM = 90;
-  
+
   public Trigger(){
   
   }
@@ -227,8 +230,8 @@ private class Trigger {
     buffer[pos] = sensor;
     pos = (pos + 1) % buffer.length;    
     int avg = avg();
-    active = ( avg > MIN_LIM && avg < MAX_LIM)  ? true : false;
-    controller.state_label.setText(MIN_LIM + " > " + avg + " < " + MAX_LIM + (active ? " * " : ""));
+    active = ( avg > RecordarloTodo.minSensor && avg < RecordarloTodo.maxSensor)  ? true : false;
+    controller.state_label.setText(RecordarloTodo.minSensor + " > " + avg + " < " + RecordarloTodo.maxSensor + (active ? " * " : ""));
   }
   
   int avg(){
