@@ -1,8 +1,10 @@
 
 import java.util.*;
+import processing.core.*;
+import processing.data.*;
 public class SearchCriteria {
 
-  
+
 
   private HashMap<String, Float> playlist;
 
@@ -11,18 +13,46 @@ public class SearchCriteria {
 
   private float recurrence = 1.0f;
   private float repetition = 0.1f;
-  
+
 
   public SearchCriteria(String dbConnector) {
     this.db = new RecordarDB();  
     this.db.dbConnect(dbConnector);
-    
   }
 
   public  void find(HashSet<String> words) {    
+
     playlist = new HashMap<String, Float>();    
+
+    HashSet<String> synonyms = getSynonymForWords(words);
+
+    System.out.println("synonyms: "+ synonyms);
+    
     recurrence(words, playlist);
     usefulMovies = scoringSort();
+  }
+
+
+
+
+
+  HashSet<String> getSynonymForWords(HashSet<String> words) {
+
+    HashSet<String> result = new HashSet<String>();
+
+    for (String w : words) {
+      result.add(w);
+      
+      JSONArray syns = RecordarloTodo.synonyms.getJSONArray(w);
+
+      if ( syns != null) {
+        for (int i = 0; i < syns.size(); i++) {
+          result.add((String)syns.get(i));
+        }
+      }
+    }
+
+    return result;
   }
 
 
@@ -36,7 +66,7 @@ public class SearchCriteria {
         playlist.put(movie, (score == null) ? recurrence : score+recurrence);
       }
     }
-    
+
     System.out.println(this.toString()+": playlist.size(): "+playlist.size());
   }
 
@@ -52,10 +82,10 @@ public class SearchCriteria {
       }
     };
 
-      
+
     Object[] a = playlist.entrySet().toArray();    
     if (RecordarloTodo.debug) System.out.println(a.length);
-    
+
     Collections.shuffle(Arrays.asList(a));
     Arrays.sort(a, c);
 

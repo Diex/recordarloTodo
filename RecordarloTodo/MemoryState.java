@@ -13,12 +13,12 @@ class MemoryState extends RecordarState {
 
   Movie trash;
 
-  float sessionTime = 4; // secs  
+  float sessionTime = RecordarloTodo.sessionTime; // secs  
   int MAX_MOVIES = 10;
   private ArrayList<Movie> movies;
   boolean ready = false;  
   private ArrayList<String> session;
-  private int maxSession = 40;
+  private int maxSession = RecordarloTodo.sessionCache;
 
   public MemoryState (RecordarloTodo context, String file) {
     super(context, file);

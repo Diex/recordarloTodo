@@ -8,7 +8,7 @@ import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
 JSONObject settings;
-
+public static JSONObject synonyms;
 Controller controller;
 File mediaFolder, screens, footage;
 RecordarState currentState, idle, intro, rec, process, memory;
@@ -23,6 +23,8 @@ public boolean isSomeone = false;
 public boolean isFullScreen = false;
 
 public static boolean debug = false;
+public static int sessionTime = 40;
+public static int sessionCache = 40;
 
 void setup() {  
 
@@ -74,6 +76,8 @@ public void settings() {
 
   try {    
     settings = loadJSONObject("settings.json");
+    synonyms = loadJSONObject("synonyms.json");
+    
     if(debug) println("settings.loaded");
   }
   catch(Exception e) {
@@ -92,6 +96,10 @@ public void settings() {
   
   debug = settings.getBoolean("debug");
   if(debug) println(" - new session: " + date.toString());
+  
+  sessionTime = settings.getInt("sessionTime");
+ 
+  
 }
 
 public void continueSetup() {
