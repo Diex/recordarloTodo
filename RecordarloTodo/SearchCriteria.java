@@ -50,8 +50,11 @@ public class SearchCriteria {
       }
     };
 
+      
     Object[] a = playlist.entrySet().toArray();    
     if (RecordarloTodo.debug) System.out.println(a.length);
+    
+    Collections.shuffle(Arrays.asList(a));
     Arrays.sort(a, c);
 
     ArrayList<String> result = new ArrayList<String>();    
