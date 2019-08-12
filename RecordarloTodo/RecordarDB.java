@@ -39,7 +39,7 @@ class RecordarDB {
       System.exit(1111);
     }
 
-    System.out.println("db connected !!!");
+   if(RecordarloTodo.debug)  System.out.println("db connected !!!");
   }
 
 
@@ -299,7 +299,6 @@ class RecordarDB {
     String sql = "SELECT * FROM tags";
 
     try {
-
       PreparedStatement pstmt  = connection.prepareStatement(sql);    
       ResultSet rs  = pstmt.executeQuery();
       while (rs.next()) {      
@@ -309,8 +308,8 @@ class RecordarDB {
     catch (SQLException e) {    
       System.out.println(e.getMessage());
     }
-
-    System.out.println("tags[] created...");
+    
+    if(RecordarloTodo.debug) System.out.println(this.toString()+": tags cached");
   }
 
   public String dbGetVideo(String videoId) {

@@ -22,48 +22,18 @@ public boolean isSomeone = false;
 
 public boolean isFullScreen = false;
 
+public static boolean debug = false;
 
-private class Interceptor extends PrintStream
-{
-    PrintWriter errors;
-    
-    public Interceptor(OutputStream out)
-    {
-        super(out, true);
-        errors = createWriter("errors_"+date.getTime()+".txt");
-    }
-    
-    @Override
-    public void print(String s)
-    {//do what ever you like
-        
-        errors.println(s);
-        super.print(s);
-    }
-    
-    public void close(){
-      errors.flush(); // Writes the remaining data to the file
-      errors.close(); // Finishes the file
-    }
-}
-
-
-//public static void main(String[] args)
-//{
-
-//}
-
-    
 void setup() {  
 
   PrintStream origOut = System.out;
-    PrintStream interceptor = new Interceptor(origOut);
-    System.setOut(interceptor);// just add the interceptor
-  
+  PrintStream interceptor = new Interceptor(origOut);
+  System.setOut(interceptor);// just add the interceptor
+
   try {
     // no existe settings.json
     String mediaFolderPath = settings.getString("defaultPath");
-    println(mediaFolderPath);    
+    if(debug) println("mediaFolder: " + mediaFolderPath);    
     if (mediaFolderPath == null || mediaFolderPath == "" ) {
       System.out.println("settings.defaultPath.null");
       throw new NullPointerException("settings.defaultPath.null");
@@ -72,21 +42,21 @@ void setup() {
     // no existe la carpeta
     mediaFolder = new File(mediaFolderPath);    
     if (!mediaFolder.exists() || !mediaFolder.isDirectory()) {
-      System.out.println("defaultPath.notExists");
+      if(debug) System.out.println("defaultPath.notExists");
       throw new FileNotFoundException("defaultPath.notExists");
     }
 
     // no existe screens en la carpeta
     screens = new File(mediaFolder.getAbsolutePath()+"/screens");
     if (!screens.exists() || !screens.isDirectory()) {
-      System.out.println("defaultPath/screens.notExists");
+      if(debug) System.out.println("defaultPath/screens.notExists");
       throw new FileNotFoundException("defaultPath/screens.notExists");
     }
 
     // no existe footage en la carpeta
     footage = new File(mediaFolder.getAbsolutePath()+"/footage");
     if (!footage.exists() || !footage.isDirectory()) {
-      System.out.println("defaultPath/footage.notExists");
+      if(debug) System.out.println("defaultPath/footage.notExists");
       throw new FileNotFoundException("defaultPath/footage.notExists");
     }
   }  
@@ -96,31 +66,32 @@ void setup() {
   }
 
   continueSetup();
-  
-  
 }
 
-public void settings(){
+public void settings() {
   date = new Date();
- 
+  
 
   try {    
     settings = loadJSONObject("settings.json");
-    println("settings.loaded");
+    if(debug) println("settings.loaded");
   }
   catch(Exception e) {
     println("settings.notExists");
-    System.out.println("settings.notExists");
+    if(debug) System.out.println("settings.notExists");
     exit();
   }
 
-  if(settings.getString("fullScreen").equals("YES")){    
+  if (settings.getString("fullScreen").equals("YES")) {    
     int screen = settings.getInt("screen"); 
     isFullScreen = true;
     fullScreen(screen);
-  } else{
-     size(640, 480); 
+  } else {
+    size(640, 480);
   }
+  
+  debug = settings.getBoolean("debug");
+  if(debug) println(" - new session: " + date.toString());
 }
 
 public void continueSetup() {
@@ -138,7 +109,7 @@ public void continueSetup() {
   }
   catch (Exception e) {
     e.printStackTrace();
-    System.out.println(e.toString());
+    if(debug) System.out.println(e.toString());
     exit();
   }
 
@@ -150,19 +121,17 @@ public void continueSetup() {
 
   currentState = rec;
   rec.onEnter();
-  
-  
 }
 boolean flag = true;
 
 void draw() {
-  if(flag && !isFullScreen) {
+  if (flag && !isFullScreen) {
     int screenX = settings.getInt("screenX");
     int screenY = settings.getInt("screenY");    
     surface.setLocation(screenX, screenY);
     flag = false;
   }
-  
+
   background(0);
   if (currentState != null) {
     currentState.render();
@@ -171,7 +140,7 @@ void draw() {
 
 
 public void keyPressed() {
-  println("keyPressed", key);
+  if(debug) println("keyPressed", key);
   if (key == 'p') idle.onExit();
   if (key == 'r') randomTags();
 }
@@ -189,11 +158,35 @@ void movieEvent(Movie m) {
 }
 
 public void exit() {
+
+  if(debug) System.out.println("recordarlo todo says bye bye...");
   
-  System.out.println("recordarlo todo says bye bye...");
   ((Interceptor) System.out).close();
-  
-  println("recordarlo_10 says bye bye...");
   controller.openDictation();
   super.exit();
+}
+
+private class Interceptor extends PrintStream
+{
+  PrintWriter errors;
+
+  public Interceptor(OutputStream out)
+  {
+    super(out, true);
+    errors = createWriter("errors_"+date.getTime()+".txt");
+  }
+
+  @Override
+    public void print(String s)
+  {
+    //do what ever you like        
+    errors.println(s);
+    errors.flush(); // Writes the remaining data to the file
+    super.print(s);
+  }
+
+  public void close() {
+    
+    errors.close(); // Finishes the file
+  }
 }

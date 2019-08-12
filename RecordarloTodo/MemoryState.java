@@ -10,21 +10,24 @@ import processing.core.*;
 class MemoryState extends RecordarState {
   Ani timeOut;
   float dummy = 0;
-  
+
   Movie trash;
-    
-  float sessionTime = 40; // secs  
+
+  float sessionTime = 4; // secs  
   int MAX_MOVIES = 10;
   private ArrayList<Movie> movies;
   boolean ready = false;  
+  private ArrayList<String> session;
+  private int maxSession = 40;
 
   public MemoryState (RecordarloTodo context, String file) {
     super(context, file);
     trash = movie;
+    session = new ArrayList<String>();
   }
 
   public void onEnter() {          
-    System.out.println(this+":onEnter");
+    if (RecordarloTodo.debug) System.out.println(this+":onEnter");
     ready = false;
     movies = new ArrayList<Movie>();
     alpha = 1.0f;
@@ -32,36 +35,57 @@ class MemoryState extends RecordarState {
     timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
   }
 
-  private void loadMovies(SearchCriteria search) {  
-    System.out.println("loadMovies()");    
+  private void loadMovies(SearchCriteria search) {
+
+    if (RecordarloTodo.debug) System.out.println("loadMovies()");    
+
     if (!search.hasMovies()) {
-      System.out.println("search.hasMovies() == false");
+      if (RecordarloTodo.debug) System.out.println("search.hasMovies() == false");
       movie = trash;
+      movie.loop();
+      ready = true;
       return;
     }
 
-    ArrayList<String> um = search.usefulMovies();     
+    ArrayList<String> um = sessionFiltered(search.usefulMovies());
+
+    if (um.size() < 1) {
+      if (RecordarloTodo.debug) System.out.println("sessionFiltered full match !!!");
+      movie = trash;
+      movie.loop();
+      ready = true;
+      return;
+    }
+
     int maxMovies = um.size() > MAX_MOVIES ? MAX_MOVIES : um.size(); 
-    
     for (int qty = 0; qty < maxMovies; qty ++) {
       String movieFile = context.footage.getAbsolutePath()+"/"+ um.get(qty);
-      context.println("loading: " + movieFile);
-      
-      try{
-        Movie m = new Movie((PApplet) context, movieFile);
-        movies.add(m);
-      }catch (Exception e){
-        e.printStackTrace();
-      }
-    }    
-    
+      System.out.println("loading: " + movieFile);         
+      Movie m = new Movie((PApplet) context, movieFile);
+      movies.add(m);
+    }
     movie.stop();
     movie = movies.get(0);
     ready = true;
   }
 
+  private ArrayList<String> sessionFiltered(ArrayList<String> um) {
+    ArrayList<String> sessionFiltered = new ArrayList<String>();    
+    for (String movie : um) {      
+      if (session.indexOf(movie) != -1) {
+        continue;  // si ya salio recientemente, lo quito y sigo de largo...
+      }
+
+      session.add(movie);
+      sessionFiltered.add(movie);      
+      if (session.size() > maxSession) session.remove(0);
+    }
+    return sessionFiltered;
+  }
+
+
   public void render() {    
-    if(!ready) return;
+    if (!ready) return;
     super.render();    
     if (lastFrame(movie)) nextMovie();
   }
@@ -73,10 +97,10 @@ class MemoryState extends RecordarState {
   }
 
   private void nextMovie() {
-    if (movies == null) return;    
+    if (movies == null || movies.indexOf(movie) == -1) return;  // -1 es que estoy en trash    
     int current = movies.indexOf(movie);
     movie.stop();
-    System.out.println("playing "+current+ " of "+ movies.size());
+    System.out.println("playing: "+current+ " of "+ movies.size());
     movie = movies.get((current+1) % movies.size());
     movie.loop();
   }

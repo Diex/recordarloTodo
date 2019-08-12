@@ -16,7 +16,10 @@ class ProcessState extends RecordarState {
     movie.loop();
     fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );        
     // dispara la busqueda en la db....
-    context.search.find(context.controller.getWords());
+    
+    HashSet<String> words = context.controller.getWords();
+    System.out.println("tags: "+words);
+    context.search.find(words);
     // y le doy tiempo    ...
 
     timeOut = new Ani(this, 4.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");

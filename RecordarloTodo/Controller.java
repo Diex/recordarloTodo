@@ -35,7 +35,6 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
   PApplet parent;
   
 //para apagar el ducking del dictation
-
 //roma:~ diex$ defaults write com.apple.SpeechRecognitionCore AllowAudioDucking -bool NO
 //roma:~ diex$ defaults write com.apple.speech.recognition.AppleSpeechRecognition.prefs DictationIMAllowAudioDucking -bool NO
 //roma:~ diex$ 
@@ -121,10 +120,6 @@ public class Controller extends JFrame implements ActionListener, DocumentListen
     return uniqueWords;
   }
 
-
-  private void println(String s) {
-    System.out.println(s);
-  }
 
   public void Log(String v) {
     this.log.append(v+"\n");

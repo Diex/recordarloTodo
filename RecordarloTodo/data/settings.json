@@ -1,7 +1,10 @@
 {
 	"defaultPath": "/Users/diex/Documents/work/personas/IVANA NEBULONI/data",
-	"fullScreen" : "YES", 
+	"fullScreen" : "noup", 
 	"screen" : 2,
-	"screenX" : 0,
-	"screenY" : -640
+	"screenX" : 640,
+	"screenY" : -640,
+	"debug" : false
 }
+
+
