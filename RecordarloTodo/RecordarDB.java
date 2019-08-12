@@ -12,8 +12,8 @@ class RecordarDB {
 
   Connection connection = null;
 
-  ArrayList<String> tags; //cache 
-
+  ArrayList<String> tags; // cache 
+  
 
   //void dbConnect(VideoFolder vf) {
   void dbConnect(String db) {
@@ -41,70 +41,6 @@ class RecordarDB {
 
    if(RecordarloTodo.debug)  System.out.println("db connected !!!");
   }
-
-
-
-
-  //void dbAddFiles(VideoFolder vf) {
-  //  for (String video : vf.files) {
-  //    dbAddVideo(video);
-  //  }
-  //}
-
-  //int dbAddVideo(String name) {
-  //  if (dbGetVideoId(name) == null) {
-  //    insert("videos", "name", name);
-  //  }
-  //  return 0;
-  //}
-
-  //void dbAddTagToVideo(String video, String tag) {
-
-  //  String tagId = dbGetTagId(tag); 
-  //  String videoId = dbGetVideoId(video);
-
-  //  if (tagId == null) {
-  //    println("inserting tag: "+ tag);
-  //    insert("tags", "tag", tag);
-  //    tagId = dbGetTagId(tag);
-  //  }
-
-  //  String linkExists = dbGetLinkId(videoId, tagId);
-
-  //  if (linkExists == null) {
-  //    dbInsertLink(videoId, tagId);
-  //  }
-  //}
-
-
-
-  //public void dbInsertLink(String videoId, String tagId) {
-  //  String sql = "INSERT INTO links (video_id, tag_id) VALUES(?,?)";
-  //  try { 
-  //    PreparedStatement pstmt = connection.prepareStatement(sql);
-  //    pstmt.setString(1, videoId);
-  //    pstmt.setString(2, tagId);
-  //    pstmt.executeUpdate();
-  //    println("inserting link: "+videoId+" -> "+tagId);
-  //  } 
-  //  catch (SQLException e) {
-  //    System.out.println(e.getMessage());
-  //  }
-  //}
-
-  //public void insert(String table, String field, String value) {
-  //  String sql = "INSERT INTO "+table+"("+field+") VALUES(?)";
-  //  try { 
-  //    PreparedStatement pstmt = connection.prepareStatement(sql);
-  //    pstmt.setString(1, value);
-  //    pstmt.executeUpdate();
-  //    println("inserting: "+field+":"+value+" in table " +table);
-  //  } 
-  //  catch (SQLException e) {
-  //    System.out.println(e.getMessage());
-  //  }
-  //}
-
 
 
   public String dbGetLinkId(String video_id, String tag_id) {
@@ -342,14 +278,7 @@ class RecordarDB {
     String tagId = dbGetTagId(tag);
 
     System.out.println(videoId+" , "+ tagId);
-
-
     String sql = "DELETE FROM links WHERE video_id = ? AND tag_id = ?";
-
-    //String sql = "SELECT link_id FROM links WHERE video_id = ?"+ 
-    //"AND tag_id LIKE ?";
-
-
     try {
 
       PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -357,9 +286,6 @@ class RecordarDB {
       pstmt.setString(2, tagId);
       pstmt.executeUpdate();
 
-      //while (rs.next()) {      
-
-      //}
     } 
     catch (SQLException e) {
       System.out.println(e.getMessage());

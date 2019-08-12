@@ -1,4 +1,123 @@
 {
-	"abuelo" : ["nono", "anciano", "viejo"],
-	"abuela" : []
+  "synonyms": [
+    {
+      "tag": "elTag",
+      "words": [
+        "sinonimo1",
+        "sinonimo2",
+        "sinonimo3"
+      ]
+    },
+    {
+      "tag": "abuelo",
+      "words": [
+        "nono",
+        "anciano",
+        "viejo",
+        "abue",
+        "abuelos"
+      ]
+    },
+    {
+      "tag": "abuela",
+      "words": [
+        "nona",
+        "anciana",
+        "vieja",
+        "abue",
+        "abuelas"
+      ]
+    },
+    {
+      "tag": "jugar",
+      "words": [
+        "jugaba",
+        "jugando",
+        "jugabamos",
+        "jugue",
+        "jugaban"
+      ]
+    },
+    {
+      "tag": "correr",
+      "words": [
+        "corria",
+        "corrio",
+        "corriendo",
+        "corriamos",
+        "corretear",
+        "correteando"
+      ]
+    },
+    {
+      "tag": "acariciar",
+      "words": [
+        "acariciaba",
+        "acaricie",
+        "acaricio",
+        "acariciabamos",
+        "caricia",
+        "acariciando"
+      ]
+    },
+    {
+      "tag": "acomodar",
+      "words": [
+        "acomode",
+        "acomodo",
+        "acomodando",
+        "acomodabamos",
+        "acomodando",
+        "acomodado"
+      ]
+    },
+    {
+      "tag": "alzar",
+      "words": [
+        "alzaba",
+        "alzo",
+        "alzaban",
+        "alzan",
+        "alzando"
+      ]
+    },
+    {
+      "tag": "aplaidur",
+      "words": [
+        "aplaudo",
+        "aplaude",
+        "aplauden",
+        "aplaudimos",
+        "aplaudia",
+        "aplaudiamos",
+        "aplaudias"
+      ]
+    },
+    {
+      "tag": "arrastrar",
+      "words": [
+        "arrastro",
+        "arrastras",
+        "arrastra",
+        "arrastramos",
+        "arrastran",
+        "arrastraba",
+        "arrastrabas",
+        "arrastrabamos",
+        "arrastraban"
+      ]
+    },
+    {
+      "tag": "arriar",
+      "words": [
+        "arrio",
+        "arria",
+        "arrian",
+        "arriaba",
+        "arriabas",
+        "arriabamos",
+        "arriaban"
+      ]
+    }
+  ]
 }

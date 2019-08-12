@@ -7,6 +7,7 @@ public class SearchCriteria {
 
 
   private HashMap<String, Float> playlist;
+  private HashMap<String, String> replacements;
 
   private ArrayList<String> usefulMovies;
   private RecordarDB db;
@@ -18,32 +19,48 @@ public class SearchCriteria {
   public SearchCriteria(String dbConnector) {
     this.db = new RecordarDB();  
     this.db.dbConnect(dbConnector);
+    loadSynonyms();
+  }
+
+  private void loadSynonyms() {
+    replacements = new HashMap<String, String>();
+
+    JSONArray syns = RecordarloTodo.synonyms.getJSONArray("synonyms");
+
+    for (int i = 0; i < syns.size(); i ++) { 
+      JSONObject replacements = syns.getJSONObject(i);      
+      JSONArray words = replacements.getJSONArray("words");      
+      String tag = replacements.getString("tag");
+      for (int word = 0; word < words.size(); word++) {
+        if(RecordarloTodo.debug) System.out.println(words.getString(word) + " : " + tag);
+        this.replacements.put(words.getString(word), tag);
+      }
+    }
   }
 
   public  void find(HashSet<String> words) {    
 
     System.out.println("find: "+words);
-    
+
     playlist = new HashMap<String, Float>();    
 
-    HashSet<String> synonyms = getSynonymForWords(words);
-    System.out.println("synonyms: "+ synonyms);    
-    recurrence(words, playlist);
+    HashSet<String> replacements = getReplacementsForWords(words);
+    System.out.println("replacement: "+ replacements);    
+    recurrence(replacements, playlist);
     usefulMovies = scoringSort();
-    
   }
 
 
-  HashSet<String> getSynonymForWords(HashSet<String> words) {
 
-    HashSet<String> result = new HashSet<String>();
-    for (String w : words) {
-      result.add(w);      
-      JSONArray syns = RecordarloTodo.synonyms.getJSONArray(w);
-      if ( syns != null) {
-        for (int i = 0; i < syns.size(); i++) {
-          result.add((String)syns.get(i));
-        }
+
+  HashSet<String> getReplacementsForWords(HashSet<String> words) {
+    HashSet<String> result = new HashSet<String>();   
+    for (String w : words) {          
+      String replacementWord = replacements.get(w);
+      if (replacementWord != null) {
+        result.add(replacementWord);
+      } else {
+        result.add(w);
       }
     }
     return result;
@@ -60,8 +77,7 @@ public class SearchCriteria {
         playlist.put(movie, (score == null) ? recurrence : score+recurrence);
       }
     }
-
-    System.out.println(this.toString()+": playlist.size(): "+playlist.size());
+    if(RecordarloTodo.debug) System.out.println(this.toString()+": playlist.size(): "+playlist.size());
   }
 
 
@@ -79,7 +95,6 @@ public class SearchCriteria {
 
     Object[] a = playlist.entrySet().toArray();    
     if (RecordarloTodo.debug) System.out.println(a.length);
-
     Collections.shuffle(Arrays.asList(a));
     Arrays.sort(a, c);
 

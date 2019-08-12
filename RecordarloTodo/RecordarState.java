@@ -14,7 +14,6 @@ public class RecordarState {
   Movie movie;
   PApplet parent;
  
-  float fadeInTime = 0.2f;
   float fadeOutTime = 0.2f;  
   float alpha = 1.0f;
   

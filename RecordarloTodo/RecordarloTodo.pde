@@ -6,45 +6,81 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
-
 import processing.serial.*;
 
 
 
-Serial myPort;  // Create object from Serial class
-int val;      // Data received from the serial port
 
-
-JSONObject settings;
+public static JSONObject settings;
 public static JSONObject synonyms;
+
+Serial myPort;
 Controller controller;
 File mediaFolder, screens, footage;
 RecordarState currentState, idle, intro, rec, process, memory;
 SearchCriteria search;
 Date date;
-
 Trigger trigger;
 
-boolean withErrors = false;
-
-public boolean isSomeone = false;
-
-public boolean isFullScreen = false;
-
+public static boolean isFullScreen = false;
 public static boolean debug = false;
 public static int sessionTime = 40;
 public static int sessionCache = 40;
 public static int minSensor = 50;
 public static int maxSensor = 90;
 
-void setup() {  
+
+
+
+public void settings() {
+
+  date = new Date();
 
   PrintStream origOut = System.out;
   PrintStream interceptor = new Interceptor(origOut);
-  System.setOut(interceptor);// just add the interceptor
+  System.setOut(interceptor);
+
+  try {    
+    settings = loadJSONObject("settings.json");     
+  }
+  catch(Exception e) {
+    System.out.println("settings.notExists");
+    exit();
+  }
+
+  if (settings.getString("fullScreen").equals("YES")) {    
+    int screen = settings.getInt("screen"); 
+    isFullScreen = true;
+    fullScreen(screen);
+  } else {
+    size(640, 480);
+  }
+  
+  debug = settings.getBoolean("debug");
+
+  if(debug) println(" - new session: " + date.toString());  
+ 
+ for(String portName : Serial.list()){
+   if(portName.indexOf("usbmodem") != -1){
+      myPort = new Serial(this, portName, 115200);
+      if(debug) System.out.println("arduino at: "+portName);
+      myPort.bufferUntil('\n');
+      break;
+   }   
+ }
+ 
+  minSensor = settings.getInt("minSensor");;
+  maxSensor = settings.getInt("maxSensor");;
+  sessionTime = settings.getInt("sessionTime");
+}
+
+
+void setup() {  
+
+  synonyms = loadJSONObject("synonyms.json");
 
   try {
-    // no existe settings.json
+    // no existe defaultPath
     String mediaFolderPath = settings.getString("defaultPath");
     if(debug) println("mediaFolder: " + mediaFolderPath);    
     if (mediaFolderPath == null || mediaFolderPath == "" ) {
@@ -81,53 +117,11 @@ void setup() {
   continueSetup();
 }
 
-public void settings() {
-  date = new Date();
-  
-
-  try {    
-    settings = loadJSONObject("settings.json");
-    synonyms = loadJSONObject("synonyms.json");
-    
-    if(debug) println("settings.loaded");
-  }
-  catch(Exception e) {
-    println("settings.notExists");
-    if(debug) System.out.println("settings.notExists");
-    exit();
-  }
-
-  if (settings.getString("fullScreen").equals("YES")) {    
-    int screen = settings.getInt("screen"); 
-    isFullScreen = true;
-    fullScreen(screen);
-  } else {
-    size(640, 480);
-  }
-  
-  debug = settings.getBoolean("debug");
-  if(debug) println(" - new session: " + date.toString());
-  
-  sessionTime = settings.getInt("sessionTime");
- 
- for(String portName : Serial.list()){
-   if(portName.indexOf("usbmodem") != -1){
-      myPort = new Serial(this, portName, 115200);
-      if(debug) System.out.println("arduino at: "+portName);
-      myPort.bufferUntil('\n');
-      break;
-   }   
- }
- 
-  minSensor = settings.getInt("minSensor");;
-  maxSensor = settings.getInt("maxSensor");;
-
-}
-
 public void continueSetup() {
-  String[] args = {"Show"};
-  controller = new Controller(this);
   frameRate(30);
+  
+  //String[] args = {"Show"};
+  controller = new Controller(this);  
   Ani.init(this);
 
   try {
@@ -145,15 +139,15 @@ public void continueSetup() {
 
   String dbConnector = "jdbc:sqlite:"+footage+File.separator+"videos.db";
   search = new SearchCriteria(dbConnector);
-
+  
   currentState = idle;
   idle.onEnter();
-
   //currentState = rec;
   //rec.onEnter();
   
   trigger = new Trigger();
 }
+
 boolean flag = true;
 
 void draw() {
@@ -222,9 +216,7 @@ private class Trigger {
   int pos = 0;
   boolean active = false;
 
-  public Trigger(){
-  
-  }
+  public Trigger(){  }
 
   public void update(int sensor){
     buffer[pos] = sensor;
