@@ -23,6 +23,7 @@ RecordarState currentState, idle, intro, rec, process, memory;
 SearchCriteria search;
 Date date;
 
+Trigger trigger;
 
 boolean withErrors = false;
 
@@ -107,13 +108,14 @@ public void settings() {
   
   sessionTime = settings.getInt("sessionTime");
  
- String portName = Serial.list()[0];
  for(String portName : Serial.list()){
-   if(portName.
-    myPort = new Serial(this, portName, 9600);
+   if(portName.indexOf("usbmodem") != -1){
+      myPort = new Serial(this, portName, 115200);
+      if(debug) System.out.println("arduino at: "+portName);
+      myPort.bufferUntil('\n');
+      break;
+   }   
  }
- 
-  
 }
 
 public void continueSetup() {
@@ -143,6 +145,8 @@ public void continueSetup() {
 
   currentState = rec;
   rec.onEnter();
+  
+  trigger = new Trigger();
 }
 boolean flag = true;
 
@@ -155,6 +159,7 @@ void draw() {
   }
 
   background(0);
+  trigger.update(sensor);
   if (currentState != null) {
     currentState.render();
   }
@@ -187,6 +192,52 @@ public void exit() {
   controller.openDictation();
   super.exit();
 }
+
+int sensor = 0;
+
+public void serialEvent(Serial s){    
+  String val = s.readString(); 
+  if(val == null) return;  
+  try{
+    sensor = Integer.parseInt(val.trim());
+  }catch (Exception e){
+    //e.printStackTrace();
+  }
+  if(debug) System.out.println("sensor: " + sensor);
+}  
+
+
+private class Trigger {
+  
+  int buffer[] = new int[25 * 4]; // 4 secs... aprox
+  int pos = 0;
+  boolean active = false;
+  int MIN_LIM = 50;
+  int MAX_LIM = 90;
+  
+  public Trigger(){
+  
+  }
+
+  public void update(int sensor){
+    buffer[pos] = sensor;
+    pos = (pos + 1) % buffer.length;
+    
+    int avg = avg();
+    active = ( avg > MIN_LIM && avg < MAX_LIM)  ? true : false;
+    if(!debug) System.out.println(MIN_LIM + " > " + avg + " < " + MAX_LIM + (active ? " * " : ""));
+  }
+  
+  int avg(){
+    int sum = 0;
+    for(int val : buffer){
+      sum += val;
+    }    
+    return sum/buffer.length;
+  }
+  
+}
+
 
 private class Interceptor extends PrintStream
 {
