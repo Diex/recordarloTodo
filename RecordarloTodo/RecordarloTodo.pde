@@ -7,6 +7,14 @@ import java.text.SimpleDateFormat;
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
 
+import processing.serial.*;
+
+
+
+Serial myPort;  // Create object from Serial class
+int val;      // Data received from the serial port
+
+
 JSONObject settings;
 public static JSONObject synonyms;
 Controller controller;
@@ -98,6 +106,12 @@ public void settings() {
   if(debug) println(" - new session: " + date.toString());
   
   sessionTime = settings.getInt("sessionTime");
+ 
+ String portName = Serial.list()[0];
+ for(String portName : Serial.list()){
+   if(portName.
+    myPort = new Serial(this, portName, 9600);
+ }
  
   
 }
