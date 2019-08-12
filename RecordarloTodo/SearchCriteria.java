@@ -2,34 +2,24 @@
 import java.util.*;
 public class SearchCriteria {
 
-  public final int INTERSECTION = 1;
-
-  //private ArrayList<String> matches;
-  //private ArrayList<String> usefulMovies;
 
   private HashMap<String, Float> playlist;
-
+  private ArrayList<String> usefulMovies;
   private RecordarDB db;
-
 
   private float recurrence = 1.0f;
   private float repetition = -1.0f;
-
 
   public SearchCriteria(String dbConnector) {
     this.db = new RecordarDB();  
     this.db.dbConnect(dbConnector);
   }
 
-  public  void find(HashSet<String> words, int criteria) {    
+  public  void find(HashSet<String> words) {    
+
     playlist = new HashMap<String, Float>();    
-
-    recurrence(words, playlist); 
-
-    //switch(criteria) {
-    //case INTERSECTION:
-    //  playlist = intersection(matches);
-    //}
+    recurrence(words, playlist);
+    usefulMovies = scoringSort();
   }
 
 
@@ -40,58 +30,50 @@ public class SearchCriteria {
       ArrayList<String> matches = db.dbGetVideosForTag(tag);
       for (String movie : matches) {
         Float score = playlist.get(movie);          
-        playlist.put(movie, (score == null) ? recurrence : score+recurrence);        
+        playlist.put(movie, (score == null) ? recurrence : score+recurrence);
       }
     }
-    
-    Object[] a = playlist.entrySet().toArray();
-    for (Object e : a) {
-      String m = ((Map.Entry<String, Integer>) e).getKey();
-      //result.add(m);
-      System.out.println(m + " : "
-        + ((Map.Entry<String, Integer>) e).getValue());
-    }
-    //Serial.out.println("recurrence:");
+
+    //Object[] a = playlist.entrySet().toArray();
+    //for (Object e : a) {
+    //  String m = ((Map.Entry<String, Integer>) e).getKey();
+    //  System.out.println(m + " : "
+    //    + ((Map.Entry<String, Integer>) e).getValue());
+    //}
   }
 
 
-  //private HashMap<String, Float> intersection(ArrayList<String> matches) {
-  //}
+  private ArrayList<String> scoringSort() {
 
+    //HashMap<String, Float> playlist
+    System.out.println("scoringSort()");
+    
+    Comparator c = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((Map.Entry<String, Float>) o2).getValue()
+          .compareTo(((Map.Entry<String, Float>) o1).getValue());
+      }
+    };
 
-  //private ArrayList<String> intersection(ArrayList<String> matches) {
+    Object[] a = playlist.entrySet().toArray();    
+    System.out.println(a.length);
+    Arrays.sort(a, c);
+    
+    
+    ArrayList<String> result = new ArrayList<String>();    
 
-  //  ArrayList<String> intersection = new ArrayList<String>();    
-  //  HashMap<String, Integer> movieCount = new HashMap<String, Integer>();
+    for (Object e : a) {
 
-  //  for (String movie : matches) {
-  //    Integer count = movieCount.get(movie);          
-  //    movieCount.put(movie, (count==null) ? 1 : count+1);
-  //  }
+      String m = ((Map.Entry<String, Float>) e).getKey();
+      result.add(m);
+      System.out.println(m);
+    }
 
-  //  Comparator c = new Comparator() {
-  //    public int compare(Object o1, Object o2) {
-  //      return ((Map.Entry<String, Integer>) o2).getValue()
-  //        .compareTo(((Map.Entry<String, Integer>) o1).getValue());
-  //    }
-  //  };
+    return result;
+  }
 
-  //  Object[] a = movieCount.entrySet().toArray();
-  //  Arrays.sort(a, c);
-
-  //  for (Object e : a) {
-  //    String m = ((Map.Entry<String, Integer>) e).getKey();
-  //    result.add(m);
-  //    System.out.println(m + " : "
-  //      + ((Map.Entry<String, Integer>) e).getValue());
-  //  }
-
-  //  return intersection;
-  //}
-
-  ArrayList<String> usefulMovies() {
-    ArrayList<String> usefulMovies = new ArrayList<String>();
-    usefulMovies.addAll(playlist.keySet());
+  ArrayList<String> usefulMovies() { 
+    System.out.println("usefulMovies()");
     return usefulMovies;
   }
 

@@ -13,12 +13,15 @@ class MemoryState extends RecordarState {
   Ani timeOut;
   
   float dummy = 0;
+  Movie trash;
+  
+  
   float sessionTime = 40; // secs  
   int MAX_MOVIES = 10;
+  private ArrayList<Movie> movies;
   
-  Movie trash;
-  ArrayList<Movie> movies;
   
+  boolean ready = false;  
 
   public MemoryState (RecordarloTodo context, String file) {
     super(context, file);
@@ -27,37 +30,46 @@ class MemoryState extends RecordarState {
 
   public void onEnter() {      
     System.out.println(this+":onEnter");
+    ready = false;
+    movies = new ArrayList<Movie>();
+    alpha = 1.0f;
     loadMovies(context.search);
-    
-    movie.loop();    
-    fadeIn = new Ani(this, fadeInTime, "alpha", 1.0f );
     timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
   }
 
   private void loadMovies(SearchCriteria search) {  
-
+    System.out.println("loadMovies()");
+    
     if (!search.hasMovies()) {
       System.out.println("search.hasMovies() == false");
       movie = trash;
       return;
     }
 
-    movies = new ArrayList<Movie>();
-
-    int maxMovies = search.usefulMovies().size() > MAX_MOVIES ? MAX_MOVIES : search.usefulMovies().size(); 
+    
+    ArrayList<String> um = search.usefulMovies(); 
+    
+    int maxMovies = um.size() > MAX_MOVIES ? MAX_MOVIES : um.size(); 
     
     for (int qty = 0; qty < maxMovies; qty ++) {
-      String movieFile = context.footage.getAbsolutePath()+"/"+ search.usefulMovies().get(qty);
-      Movie m = new Movie(context, movieFile);      
-      movies.add(m);
+      String movieFile = context.footage.getAbsolutePath()+"/"+ um.get(qty);
       context.println("loading: " + movieFile);
+      
+      try{
+        Movie m = new Movie((PApplet) context, movieFile);
+        movies.add(m);
+      }catch (Exception e){
+        e.printStackTrace();
+      }
     }    
     
     movie.stop();
     movie = movies.get(0);
+    ready = true;
   }
 
   public void render() {    
+    if(!ready) return;
     super.render();    
     if (lastFrame(movie)) nextMovie();
   }
@@ -72,9 +84,11 @@ class MemoryState extends RecordarState {
     if (movies == null) return;    
     int current = movies.indexOf(movie);
     movie.stop();
+    System.out.println("playing "+current+ " of "+ movies.size());
     movie = movies.get((current+1) % movies.size());
     movie.loop();
   }
+
   public void nextState() {
     clearMovies();
     context.currentState = context.idle;

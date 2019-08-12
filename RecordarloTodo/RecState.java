@@ -22,8 +22,8 @@ class RecState extends RecordarState{
   }
   
   private void nextState(){
+    movie.stop();
     context.currentState = context.process;
     context.currentState.onEnter();
-    movie.stop();
   }
 }
