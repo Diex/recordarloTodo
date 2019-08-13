@@ -13,14 +13,11 @@ class RecState extends RecordarState{
   public void onEnter(){    
     context.controller.clearInput();
     movie.loop();
-    changeState = new Ani(this, movie.duration(), "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoProcess");    
+    changeState = new Ani(this, movie.duration(), "dummy", 0.0f, Ani.LINEAR, "onEnd:nextState");    
   }
   
-  private void gotoProcess(){
-    nextState();
-  }
   
-  private void nextState(){
+  public void nextState(){
     movie.stop();
     context.currentState = context.process;
     context.currentState.onEnter();

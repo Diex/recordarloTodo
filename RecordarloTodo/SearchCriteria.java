@@ -40,12 +40,12 @@ public class SearchCriteria {
 
   public  void find(HashSet<String> words) {    
 
-    System.out.println("find: "+words);
+    System.out.println("find:"+words);
 
     playlist = new HashMap<String, Float>();    
 
     HashSet<String> replacements = getReplacementsForWords(words);
-    System.out.println("replacement: "+ replacements);    
+    System.out.println("replacement:"+ replacements);    
     recurrence(replacements, playlist);
     usefulMovies = scoringSort();
   }
@@ -71,7 +71,9 @@ public class SearchCriteria {
   private void recurrence(HashSet<String> words, HashMap<String, Float> playlist) {            
     if (RecordarloTodo.debug) System.out.println(this.toString()+": recurrence()");
     for (String tag : words) {
+      if (RecordarloTodo.debug) System.out.println("for tag:" + tag);
       ArrayList<String> matches = db.dbGetVideosForTag(tag);
+      if (RecordarloTodo.debug) System.out.println("matches:" + matches);
       for (String movie : matches) {                
         Float score = playlist.get(movie);          
         playlist.put(movie, (score == null) ? recurrence : score+recurrence);

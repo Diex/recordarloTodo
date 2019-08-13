@@ -48,7 +48,7 @@ public void settings() {
     exit();
   }
 
-  if (settings.getString("fullScreen").equals("YES")) {    
+  if (settings.getBoolean("fullScreen")) {    
     int screen = settings.getInt("screen"); 
     isFullScreen = true;
     fullScreen(screen);
@@ -173,7 +173,7 @@ void draw() {
 
 
 public void keyPressed() {
-  if(debug) println("keyPressed", key);
+  //if(debug) println("keyPressed", key);
   if (key == 'p') idle.onExit();
   if (key == 'r') randomTags();
 }

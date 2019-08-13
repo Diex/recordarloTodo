@@ -1,15 +1,15 @@
 {
 	"defaultPath": "/Users/ivananebuloni/Desktop/recordarloMediaFiles",
-	"fullScreen" : "noup", 
+	"fullScreen" : true, 
 	"sessionTime": 40,
 	"sessionCache": 30,
-	"screen" : 2,
+	"screen" : 1,
 	"screenX" : 640,
 	"screenY" : -640,
 	"minSensor" : 50,
 	"maxSensor" : 60,
 	"enableTime" : 10,
-	"debug" : false
+	"debug" : true
 }
 
 
