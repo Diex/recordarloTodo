@@ -1,5 +1,5 @@
 {
-	"defaultPath": "/Users/diex/Documents/work/personas/IVANA NEBULONI/data",
+	"defaultPath": "/Users/ivananebuloni/Desktop/recordarloMediaFiles",
 	"fullScreen" : "noup", 
 	"sessionTime": 40,
 	"sessionCache": 30,
@@ -8,6 +8,7 @@
 	"screenY" : -640,
 	"minSensor" : 50,
 	"maxSensor" : 60,
+	"enableTime" : 10,
 	"debug" : false
 }
 

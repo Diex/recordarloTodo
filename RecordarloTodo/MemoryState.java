@@ -106,7 +106,7 @@ class MemoryState extends RecordarState {
     if (movies == null || movies.indexOf(movie) == -1) return;  // -1 es que estoy en trash    
     int current = movies.indexOf(movie);
     movie.stop();
-    System.out.println("playing: "+current+ " of "+ movies.size());
+    if (RecordarloTodo.debug) System.out.println("playing: "+current+ " of "+ movies.size());
     movie = movies.get((current+1) % movies.size());
     movie.loop();
   }

@@ -28,7 +28,7 @@ public static int sessionTime = 40;
 public static int sessionCache = 40;
 public static int minSensor = 50;
 public static int maxSensor = 90;
-
+public static int enableTime = 10; 
 
 
 
@@ -72,6 +72,8 @@ public void settings() {
   minSensor = settings.getInt("minSensor");;
   maxSensor = settings.getInt("maxSensor");;
   sessionTime = settings.getInt("sessionTime");
+  enableTime = settings.getInt("enableTime");
+  
 }
 
 
@@ -162,6 +164,7 @@ void draw() {
   background(0);
   
   trigger.update(sensor);
+  
   if (currentState != null) {
     currentState.render();
     if(currentState == idle && trigger.active) idle.onExit();
