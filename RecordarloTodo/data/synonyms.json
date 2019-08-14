@@ -1,123 +1,188 @@
 {
   "synonyms": [
     {
-      "tag": "elTag",
-      "words": [
-        "sinonimo1",
-        "sinonimo2",
-        "sinonimo3"
-      ]
+      "tag" : "elTag",
+      "words" : ["sinonimo1", "sinonimo2", "sinonimo3"]
+    },
+    { 
+      "tag" : "abuelo",
+      "words" : ["nono", "anciano", "viejo", "abue", "abuelos"]
+    },      
+    {
+      "tag" : "abuela",
+      "words" : ["nona", "anciana", "vieja", "abue", "abuelas"]
     },
     {
-      "tag": "abuelo",
-      "words": [
-        "nono",
-        "anciano",
-        "viejo",
-        "abue",
-        "abuelos"
-      ]
+      "tag" : "acariciar",
+      "words" : ["acariciaba", "acaricie", "acaricio", "acariciabamos", "caricia", "acariciando"]
     },
     {
-      "tag": "abuela",
-      "words": [
-        "nona",
-        "anciana",
-        "vieja",
-        "abue",
-        "abuelas"
-      ]
+      "tag" : "acomodar",
+      "words" : ["acomode", "acomodo", "acomodando", "acomodabamos", "acomodando", "acomodado"]
     },
     {
-      "tag": "jugar",
-      "words": [
-        "jugaba",
-        "jugando",
-        "jugabamos",
-        "jugue",
-        "jugaban"
-      ]
+      "tag" : "alzar",
+      "words" : ["alzaba", "alzo", "alzaban", "alzan", "alzando"]
     },
     {
-      "tag": "correr",
-      "words": [
-        "corria",
-        "corrio",
-        "corriendo",
-        "corriamos",
-        "corretear",
-        "correteando"
-      ]
+      "tag" : "aplaidur",
+      "words" : ["aplaudo", "aplaude", "aplauden", "aplaudimos", "aplaudia", "aplaudiamos", "aplaudias", "aplaudiendo"]
     },
     {
-      "tag": "acariciar",
-      "words": [
-        "acariciaba",
-        "acaricie",
-        "acaricio",
-        "acariciabamos",
-        "caricia",
-        "acariciando"
-      ]
+      "tag" : "arrastrar",
+      "words" : ["arrastro", "arrastras", "arrastra", "arrastramos", "arrastran", "arrastraba", "arrastrabas", "arrastrabamos", "arrastraban", "arrastrando"]
     },
     {
-      "tag": "acomodar",
-      "words": [
-        "acomode",
-        "acomodo",
-        "acomodando",
-        "acomodabamos",
-        "acomodando",
-        "acomodado"
-      ]
+      "tag" : "arriar",
+      "words" : ["arrio", "arria", "arrian", "arriaba", "arriabas", "arriabamos", "arriaban", "arriando"]
     },
     {
-      "tag": "alzar",
-      "words": [
-        "alzaba",
-        "alzo",
-        "alzaban",
-        "alzan",
-        "alzando"
-      ]
+      "tag" : "acompanar",
+      "words" : ["acompanaba", "acompanabas", "acompanabamos", "acompanaban", "acompanamos", "acompanan", "acompañando"]
     },
     {
-      "tag": "aplaidur",
-      "words": [
-        "aplaudo",
-        "aplaude",
-        "aplauden",
-        "aplaudimos",
-        "aplaudia",
-        "aplaudiamos",
-        "aplaudias"
-      ]
+      "tag" : "acostar",
+      "words" : ["acostaba", "acostabas", "acostaban", "acostabamos", "acuesto", "acuesta", "acostado", "acostarse", "acostando"]
     },
     {
-      "tag": "arrastrar",
-      "words": [
-        "arrastro",
-        "arrastras",
-        "arrastra",
-        "arrastramos",
-        "arrastran",
-        "arrastraba",
-        "arrastrabas",
-        "arrastrabamos",
-        "arrastraban"
-      ]
+      "tag" : "actuar",
+      "words" : ["actuaba", "actuabas", "actuabamos", "actuaban", "actuamos", "actuando"]
     },
     {
-      "tag": "arriar",
-      "words": [
-        "arrio",
-        "arria",
-        "arrian",
-        "arriaba",
-        "arriabas",
-        "arriabamos",
-        "arriaban"
-      ]
+      "tag" : "bailar",
+      "words" : ["bailo", "bailan", "bailaba", "bailabas", "bailabamos", "bailaban", "bailamos", "bailando"]
+    },
+    {
+      "tag" : "banar",
+      "words" : ["banaba", "banabas", "banabamos", "banaban", "banamos", "banan", "bana", "banas", "banando"]
+    },
+    {
+      "tag" : "bostezar",
+      "words" : ["bostezo", "bostezamos", "bostezan", "bostezaba", "bostezabas", "bostezaban", "bostezabamos", "bostezando"]
+    },
+    { 
+      "tag" : "brindar",
+      "words" : ["brindaba", "brindabas", "brindabamos", "brindaban", "brindando"]
+    },      
+    {
+      "tag" : "cabalgar",
+      "words" : ["cabalgaba", "cabalgabas", "cabalgabamos", "cabalgaban", "cabalgo", "cabalgamos", "cabalgando"]
+    },
+    {
+      "tag" : "caer",
+      "words" : ["caia", "caias", "caiamos", "caian", "caido", "cai", "caiste", "cayo", "cayendo"]
+    },
+    {
+      "tag" : "caminar",
+      "words" : ["caminaba", "caminabas", "caminabamos", "caminaban", "caminado", "camine", "caminaste", "caminaron", "caminamos", "caminando"]
+    },
+    {
+      "tag" : "cantar",
+      "words" : ["cantaba", "cantabas", "cantabamos", "cantaban", "cantamos", "cantando", "cante", "cantaron", "cantando"]
+    },
+    {
+      "tag" : "chapotear",
+      "words" : ["chapoteaba", "chapoteabas", "chapoteaban", "chapoteabamos", "chapoteamos", "chapotee", "chapotearon", "chapoteaste", "chapoteando"]
+    },
+    {
+      "tag" : "comer",
+      "words" : ["comia", "comias", "comiamos", "comian", "comemos", "comido", "comi", "comiste", "comio", "comimos", "comieron", "comiendo"]
+    },
+    {
+      "tag" : "correr",
+      "words" : ["corria", "corrias", "corriamos", "corrian", "corrido", "corri", "corriste", "corrio", "corrimos", "corrieron", "corre", "corriendo"]
+    },
+    {
+      "tag" : "descansar",
+      "words" : ["descansando", "descansaba", "descansabas", "descansabamos", "descansaban", "descansamos", "descansado", "descanse", "descanso", "descansan"]
+    },
+    {
+      "tag" : "descubrir",
+      "words" : ["descubriendo", "descubria", "descubrias", "descubriamos", "descubrian", "descubren", "descubrimos", "descubri", "descubriste", "descubrio", "descubrieron"]
+    },
+    {
+      "tag" : "enojar",
+      "words" : ["enojando", "enojo", "enoja", "enojada", "enojaba", "enojabas", "enojabamos", "enojaban", "enoje", "enojaste", "enojo", "enojamos", "enojaron"]
+    },
+    {
+      "tag" : "escapar",
+      "words" : ["escapaba", "escapabas", "escapabamos", "escapaban", "escapamos", "escapando", "escape", "escapaste", "escapo", "escapamos", "escaparon"]
+    },
+    {
+      "tag" : "esquiar",
+      "words" : ["esquiamos", "esquiando", "esquiaba", "esquiabas", "esquiabamos", "esquiaban", "esquie", "esquiaste", "esquio", "esquiamos", "esquiaron"]
+    },
+    {
+      "tag" : "explorar",
+      "words" : ["explorando", "exploraba", "explorabas", "exploraban", "explorabamos", "exploramos", "explore", "exploraste", "exploro", "exploramos", "exploraron"]
+    },
+    {
+      "tag" : "festejar",
+      "words" : ["festejando", "festejaba", "festejabas", "festejabamos", "festejaban", "festejamos", "festeje", "festejaste", "festejo", "festejamos", "festejaron"]
+    },
+    {
+      "tag" : "hamacar",
+      "words" : ["hamacamos", "hamaca", "hamaco", "hamacaba", "hamacabas", "hamacabamos", "hamacaban", "hamaque", "hamacaste", "hamacamos", "hamacaron", "hamacan"]
+    },
+    {
+      "tag" : "herrar",
+      "words" : ["herraba", "herrabas", "herrabamos", "herraban", "herramos", "herre", "herraste", "herro", "herramos", "herraron", "herrando", "herramos"]
+    },
+    {
+      "tag" : "insistir",
+      "words" : ["insistimos", "insistiendo", "insistia", "insistias", "insistiamos", "insistian", "insisti", "insististe", "insistio", "insistimos", "insistieron"]
+    },
+    {
+      "tag" : "intentar",
+      "words" : ["intentaba", "intentabas", "intentabamos", "intentaban", "intentando", "intentamos", "intente", "intentaste", "intento", "intentamos", "intentaron"]
+    },
+    {
+      "tag" : "jugar",
+      "words" : ["jugando", "jugamos", "jugaba", "jugabas", "jugabamos", "jugaban", "jugue","jugaste", "jugo", "jugamos", "jugaron"]
+    },
+    {
+      "tag" : "juntar",
+      "words" : ["juntamos", "junta", "junto", "juntas", "juntamos", "juntaba", "juntabas", "juntaban", "juntabamos", "junte", "juntaste", "juntaron"]
+    },
+    {
+      "tag" : "ladrar",
+      "words" : ["ladramos", "ladrando", "ladraba", "ladrabas", "ladrabamos", "ladraban", "ladre", "ladraste", "ladro", "ladraron"]
+    },
+    {
+      "tag" : "limpiar",
+      "words" : ["limpiaba", "limpiabas", "limpiabamos", "limpiaban", "limpiando", "limpiamos", "limpie", "limpiaste", "limpio", "limpiamos", "limpiaron", "limpian", "limpiarse"] 
+    },
+    {
+      "tag" : "llorar",
+      "words" : ["lloraba", "llorabas", "llorabamos", "lloraban", "llorando", "lloramos", "llore", "lloraste", "lloro", "lloramos", "lloraron", "lloro", "llora", "lloran"]
+    },
+    {
+      "tag" : "manejar",
+      "words" : ["manejaba", "manejabas", "manejabamos", "manejaban", "manejamos", "manejan", "manejando", "maneje", "manejaste", "manejo", "manejaron"]
+    },
+    {
+      "tag" : "marcar",
+      "words" : ["marcando", "marcaba", "marcamos", "marcabas", "marcabamos", "acuesta", "marcaban", "marque", "marcaste", "marco", "marcaron"]
+    },
+    {
+      "tag" : "meditar",
+      "words" : ["meditamos", "meditando", "meditaba", "meditabas", "meditabamos", "meditaban", "medite", "meditaste", "medito", "meditaron"]
+    },
+    {
+      "tag" : "mirar",
+      "words" : ["miraba", "mirabas", "mirabamos", "miraban", "miramos", "miro", "mirando", "mire", "miraste", "miramos", "miraron"]
+    },
+    {
+      "tag" : "nadar",
+      "words" : ["nadando", "nadamos", "nadaba", "nadabas", "nadabamos", "nadaban", "nade", "nadaste", "nado", "nadaron"]
+    },
+    {
+      "tag" : "navegar",
+      "words" : ["navegando", "navegamos", "navegaba", "navegabas", "navegabamos", "navegaban", "navegue", "navegaste", "navego", "navegaron"]
+    },
+    { 
+      "tag" : "nevar",
+      "words" : ["nevando", "nevado", "nevaba", "nieva", "nevo"]
     }
   ]
 }

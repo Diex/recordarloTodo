@@ -9,7 +9,7 @@
 	"minSensor" : 50,
 	"maxSensor" : 60,
 	"enableTime" : 10,
-	"debug" : true
+	"debug" : false
 }
 
 
