@@ -8,6 +8,7 @@
 	"screenY" : -640,
 	"minSensor" : 50,
 	"maxSensor" : 60,
+	
 	"debug" : false
 }
 
