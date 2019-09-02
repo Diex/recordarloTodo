@@ -2,8 +2,8 @@ import processing.video.*;
 import processing.core.*;
 import java.lang.reflect.*;
 import processing.core.*;
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 
 

@@ -1,5 +1,5 @@
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 class IdleState extends RecordarState{
   

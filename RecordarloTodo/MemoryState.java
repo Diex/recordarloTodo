@@ -1,5 +1,5 @@
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 import java.util.ArrayList;
 import processing.video.*;
@@ -8,7 +8,7 @@ import java.lang.reflect.*;
 import processing.core.*;
 
 class MemoryState extends RecordarState {
-  Ani timeOut;
+  //Ani timeOut;
   float dummy = 0;
 
   Movie trash;
@@ -32,7 +32,8 @@ class MemoryState extends RecordarState {
     movies = new ArrayList<Movie>();
     alpha = 1.0f;
     loadMovies(context.search);
-    timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
+    new TimeoutThread(this, "nextState", (long) sessionTime * 1000,false);
+    //timeOut = new Ani(this, sessionTime, "dummy", 1.0f, Ani.LINEAR, "onEnd:nextState");
   }
 
   private void loadMovies(SearchCriteria search) {

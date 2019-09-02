@@ -1,21 +1,24 @@
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 class IntroState extends RecordarState{
   
-  Ani changeState;
+  //Ani changeState;
+  
   float dummy = 0.0f;  
 
   public IntroState (RecordarloTodo context, String file){
     super(context, file);
+    
   }
 
   public void onEnter(){    
     movie.loop();
-    changeState = new Ani(this, movie.duration() - 2, "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoRec");    
+    //changeState = new Ani(this, movie.duration() - 2, "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoRec");
+    new TimeoutThread(this, "gotoRec", (long) (movie.duration() - 3) * 1000,false);
   }
    
-  private void gotoRec(){
+  public void gotoRec(){
     nextState();
   }
   

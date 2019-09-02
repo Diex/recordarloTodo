@@ -1,9 +1,9 @@
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 class RecState extends RecordarState{
   
-  Ani changeState;
+  //Ani changeState;
   float dummy = 0.0f;
   
   public RecState (RecordarloTodo context, String file){
@@ -13,10 +13,11 @@ class RecState extends RecordarState{
   public void onEnter(){    
     context.controller.clearInput();
     movie.loop();
-    changeState = new Ani(this, movie.duration(), "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoProcess");    
+    //changeState = new Ani(this, movie.duration(), "dummy", 0.0f, Ani.LINEAR, "onEnd:gotoProcess");  
+    new TimeoutThread(this, "gotoProcess", (long) (movie.duration()) * 1000,false);
   }
   
-  private void gotoProcess(){
+  public void gotoProcess(){
     nextState();
   }
   

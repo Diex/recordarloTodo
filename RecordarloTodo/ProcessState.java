@@ -1,11 +1,11 @@
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 
 import java.util.*;
 import java.util.HashSet;
 class ProcessState extends RecordarState {
 
-  Ani timeOut;
+  //Ani timeOut;
   float dummy = 0.0f;
 
   public ProcessState (RecordarloTodo context, String file) {
@@ -16,15 +16,16 @@ class ProcessState extends RecordarState {
     movie.loop();    
     HashSet<String> words = context.controller.getWords();       
     context.search.find(words);
-     // y le doy tiempo    ...
-    timeOut = new Ani(this, 4.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
+    // y le doy tiempo    ...
+    //timeOut = new Ani(this, 4.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
+    new TimeoutThread(this, "gotoMemory", (long) 4 * 1000,false);
   }
 
-  private void gotoMemory() {
+  public void gotoMemory() {
     nextState();
   }
-  
-  public void nextState(){
+
+  public void nextState() {
     movie.stop();   
     context.currentState = context.memory;    
     context.currentState.onEnter();

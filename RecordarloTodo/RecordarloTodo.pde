@@ -4,8 +4,8 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import de.looksgood.ani.*;
-import de.looksgood.ani.easing.*;
+//import de.looksgood.ani.*;
+//import de.looksgood.ani.easing.*;
 import processing.serial.*;
 
 
@@ -23,7 +23,7 @@ Date date;
 Trigger trigger;
 
 public static boolean isFullScreen = false;
-public static boolean debug = false;
+public static boolean debug = true;
 public static int sessionTime = 40;
 public static int sessionCache = 40;
 public static int minSensor = 50;
@@ -122,7 +122,7 @@ public void continueSetup() {
   
   //String[] args = {"Show"};
   controller = new Controller(this);  
-  Ani.init(this);
+  //Ani.init(this);
 
   try {
     idle = new IdleState(this, screens.getAbsolutePath()+"/idle.mp4");
@@ -261,3 +261,20 @@ private class Interceptor extends PrintStream
     errors.close(); // Finishes the file
   }
 }
+
+void setTimeout(String name,long time){
+  new TimeoutThread(this,name,time,false);
+}
+void setInterval(String name,long time){
+  intervals.put(name,new TimeoutThread(this,name,time,true));
+}
+void clearInterval(String name){
+  TimeoutThread t = intervals.get(name);
+  if(t != null){
+    t.kill();
+    t = null;
+    intervals.put(name,null);
+  }
+}
+HashMap<String,TimeoutThread> intervals = new HashMap<String,TimeoutThread>();
+ 
