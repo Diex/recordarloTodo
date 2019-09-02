@@ -33,11 +33,15 @@ public class RecordarState {
   }
 
   public void render(){        
-    int x = (parent.width-movie.width)/2;
-    int y = (parent.height-movie.height)/2;
+    //int x = (parent.width-movie.width)/2;
+    //int y = (parent.height-movie.height)/2;
+    int x = 0;
+    int y = 0;
+    
     if ( movie.width > 0) {
       parent.tint(255, alpha * 255);
-      parent.image(movie, x, y, movie.width, movie.height);
+      //parent.image(movie, x, y, movie.width, movie.height);
+      parent.image(movie, x, y, parent.width, parent.height);
     }
   }  
 }

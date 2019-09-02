@@ -2,17 +2,29 @@
 //import de.looksgood.ani.easing.*;
 
 class IdleState extends RecordarState{
+
+  float dummy = 0.0f;  
+  boolean enable = false;
   
   public IdleState (RecordarloTodo context, String file){
     super(context, file);    
   }
 
   public void onEnter(){    
-    movie.loop();    
+    movie.loop();
+    enable = false;
+     new TimeoutThread(this, "setEnable", (long) RecordarloTodo.enableTime * 1000,false);
   }
   
+  public void setEnable(){
+    enable = true;
+  }
+  public void enableIntro(){
+    enable = true;
+    if(RecordarloTodo.debug) System.out.println("enable: " + enable);
+  }
   public void onExit(){
-    nextState();
+    if(enable) nextState();
   }
   
   private void nextState(){

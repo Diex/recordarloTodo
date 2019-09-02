@@ -16,6 +16,7 @@ class ProcessState extends RecordarState {
     movie.loop();    
     HashSet<String> words = context.controller.getWords();       
     context.search.find(words);
+
     // y le doy tiempo    ...
     //timeOut = new Ani(this, 4.f, "dummy", 0.f, Ani.LINEAR, "onEnd:gotoMemory");
     new TimeoutThread(this, "gotoMemory", (long) 4 * 1000,false);

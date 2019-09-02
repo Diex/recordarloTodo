@@ -1,11 +1,11 @@
 // Ruta a la carpeta "data", donde están los videos
 //String path_to_videos = "/Users/ivananebuloni/Desktop/dual_screen_arduino/data";
 //String path_to_videos = "C:/Users/HacheG.Zeta/Desktop/dual_screen/data";
-String path_to_videos = "/Users/diex/Documents/Processing/personas/ivanaNebuloni/recordarloTodo/dual_screen_arduino/data";
+String path_to_videos = "/Users/ivananebuloni/Documents/Processing/recordadarloTodo/dual_screen_arduino/data";
 // Ancho del video (deberia ser igual al ancho de la resolucion de la pantalla)
-int video_x = 800;
+int video_x = 720;
 // Alto del video (deberia ser igual al alto de la resolucion de la pantalla)
-int video_y = 600;
+int video_y = 576;
 // Video mientras no hay nadie
 String idle_video = "idle.mp4";
 // Video introductorio con las instrucciones
@@ -173,8 +173,8 @@ void draw() {
 
 public class ShowApplet extends PApplet {
   public void settings() {
-    fullScreen();
-    //size(800, 600);
+    //fullScreen();
+    size(720, 576);
   }
   public void draw() {
     background(0);
